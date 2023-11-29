@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:00:46 by lperroti          #+#    #+#             */
-/*   Updated: 2023/11/29 18:01:08 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/11/29 18:31:34 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,6 @@ t_array	read_map(int map_fd)
 	}
 	free(l);
 	return (map);
-}
-
-void	print_str_array(t_array arr)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < array_size(arr))
-		lp_putendl_fd(((char **)arr)[i++], 2);
 }
 
 bool	flood_fill(char **map, size_t x, size_t y)
@@ -88,6 +79,29 @@ bool	check_map(t_array map)
 	return (true);
 }
 
+bool	set_player_coordinates(t_app *papp)
+{
+	size_t	x;
+	size_t	y;
+
+	y = 0;
+	x = 0;
+	while (y < array_size(papp->map))
+	{
+		if (lp_strchr(((char **)papp->map)[y], 'N'))
+		{
+			x = lp_strchr(((char **)papp->map)[y], 'N')
+				- ((char **)papp->map)[y];
+			break ;
+		}
+		y++;
+	}
+	if (!x)
+		return (false);
+	papp->player = (t_coordinates){.x = x, .y = y};
+	return (true);
+}
+
 bool	init(int ac, char **av, t_app *papp)
 {
 	int	map_fd;
@@ -101,5 +115,17 @@ bool	init(int ac, char **av, t_app *papp)
 		lp_dprintf(2, "BAD MAP\n");
 		return (false);
 	}
+	if (!set_player_coordinates(papp))
+	{
+		lp_dprintf(2, "PLAYER NOT FOUND");
+		return (false);
+	}
+	papp->mlx = mlx_init();
+	if (!papp->mlx)
+		return (array_free(papp->map), false);
+	papp->win = mlx_new_window(papp->mlx, WIN_WIDTH, WIN_HEIGHT, "fractol");
+	if (!papp->win)
+		return (array_free(papp->map), free(papp->mlx), false);
 	return (true);
 }
+

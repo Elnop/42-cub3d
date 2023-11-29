@@ -1,26 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   destroy.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/27 13:15:22 by lperroti          #+#    #+#             */
-/*   Updated: 2023/11/29 18:32:03 by lperroti         ###   ########.fr       */
+/*   Created: 2023/11/29 18:32:06 by lperroti          #+#    #+#             */
+/*   Updated: 2023/11/29 18:32:16 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
-#include <stddef.h>
 
-int	main(int ac, char **av)
+int	destroy_app(t_app *papp)
 {
-	t_app	app;
-
-	if (!init(ac, av, &app))
-	{
-		lp_dprintf(2, HELPER);
-		return (1);
-	}
-	return (0);
+	mlx_destroy_window(papp->mlx, papp->win);
+	mlx_destroy_display(papp->mlx);
+	free(papp->mlx);
+	exit(0);
+	return (1);
 }
