@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 13:15:22 by lperroti          #+#    #+#             */
-/*   Updated: 2023/11/29 18:32:03 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/11/29 20:27:00 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,6 @@ int	main(int ac, char **av)
 		lp_dprintf(2, HELPER);
 		return (1);
 	}
+	//draw_minimap(&app);
 	return (0);
 }

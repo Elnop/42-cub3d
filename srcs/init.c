@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:00:46 by lperroti          #+#    #+#             */
-/*   Updated: 2023/11/29 18:31:34 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/11/30 00:19:13 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ bool	set_player_coordinates(t_app *papp)
 
 	y = 0;
 	x = 0;
+	print_str_array(papp->map);
 	while (y < array_size(papp->map))
 	{
 		if (lp_strchr(((char **)papp->map)[y], 'N'))
@@ -117,7 +118,7 @@ bool	init(int ac, char **av, t_app *papp)
 	}
 	if (!set_player_coordinates(papp))
 	{
-		lp_dprintf(2, "PLAYER NOT FOUND");
+		lp_dprintf(2, "PLAYER NOT FOUND\n");
 		return (false);
 	}
 	papp->mlx = mlx_init();
