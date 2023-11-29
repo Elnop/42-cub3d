@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:01:40 by lperroti          #+#    #+#             */
-/*   Updated: 2023/11/27 19:01:44 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/11/29 18:01:15 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,7 @@
 typedef struct s_app {
 	t_array	map;
 }	t_app;
+
+bool	init(int ac, char **av, t_app *papp);
 
 #endif
