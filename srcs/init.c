@@ -6,11 +6,12 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:00:46 by lperroti          #+#    #+#             */
-/*   Updated: 2023/11/30 00:19:13 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/11/30 18:32:33 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
+#include <stdio.h>
 
 t_array	read_map(int map_fd)
 {
@@ -37,70 +38,41 @@ t_array	read_map(int map_fd)
 	return (map);
 }
 
-bool	flood_fill(char **map, size_t x, size_t y)
+t_coordinates	get_player_coordinates(char **map)
 {
-	if (!y || !x || y + 1 == array_size(map) || x + 1 == ft_strlen(map[y]))
-		return (false);
-	map = array_dup(map);
-	map[y][x] = '1';
-	// print_str_array(map);
-	// lp_putchar_fd('\n', 2);
-	if (!map)
-		return ((void)lp_printf("flood_fill array_dup call error"), false);
-	if (map[y][x + 1] != '1' && !flood_fill(map, x + 1, y))
-		return (false);
-	if (map[y][x - 1] != '1' && !flood_fill(map, x - 1, y))
-		return (false);
-	if (map[y + 1][x] != '1' && !flood_fill(map, x, y + 1))
-		return (false);
-	if (map[y - 1][x] != '1' && !flood_fill(map, x, y - 1))
-		return (false);
-	return (true);
+	t_coordinates	player;
+
+	player = (t_coordinates){0, 0};
+	while (player.y < array_size(map))
+	{
+		if (lp_strchr(map[player.y], 'N'))
+			player.x = lp_strchr(map[player.y], 'N') - map[player.y];
+		if (lp_strchr(map[player.y], 'O'))
+			player.x = lp_strchr(map[player.y], 'O') - map[player.y];
+		if (lp_strchr(map[player.y], 'W'))
+			player.x = lp_strchr(map[player.y], 'W') - map[player.y];
+		if (lp_strchr(map[player.y], 'S'))
+			player.x = lp_strchr(map[player.y], 'S') - map[player.y];
+		if (player.x)
+			break ;
+		player.y++;
+	}
+	if (!player.x)
+		return ((t_coordinates){});
+	((char **)map)[player.y][player.x] = '0';
+	if (get_player_coordinates(map).x)
+		return ((t_coordinates){});
+	return (player);
 }
 
-bool	check_map(t_array map)
+void	init_minimap(t_app *papp)
 {
-	size_t	p_x;
-	size_t	p_y;
-
-	p_y = 0;
-	p_x = 0;
-	while (p_y < array_size(map))
-	{
-		if (lp_strchr(((char **)map)[p_y], 'N'))
-		{
-			p_x = lp_strchr(((char **)map)[p_y], 'N') - ((char **)map)[p_y];
-			break ;
-		}
-		p_y++;
-	}
-	if (!p_x || !flood_fill(map, p_x, p_y))
-		return (false);
-	return (true);
-}
-
-bool	set_player_coordinates(t_app *papp)
-{
-	size_t	x;
-	size_t	y;
-
-	y = 0;
-	x = 0;
-	print_str_array(papp->map);
-	while (y < array_size(papp->map))
-	{
-		if (lp_strchr(((char **)papp->map)[y], 'N'))
-		{
-			x = lp_strchr(((char **)papp->map)[y], 'N')
-				- ((char **)papp->map)[y];
-			break ;
-		}
-		y++;
-	}
-	if (!x)
-		return (false);
-	papp->player = (t_coordinates){.x = x, .y = y};
-	return (true);
+		papp->mini_map_h = (float)papp->win_h * MAP_SIZE;
+		papp->mini_map_w = (float)papp->win_w * MAP_SIZE;
+		papp->mini_map_tile_h
+		= papp->mini_map_h / array_size(((char **)papp->map));
+		papp->mini_map_tile_w
+		= papp->mini_map_w / lp_strlen(((char **)papp->map)[0]);
 }
 
 bool	init(int ac, char **av, t_app *papp)
@@ -110,23 +82,24 @@ bool	init(int ac, char **av, t_app *papp)
 	if (ac < 2 || !av[1][0])
 		return (false);
 	map_fd = open(av[1], O_RDONLY);
+	if (map_fd == -1)
+		return (false);
 	papp->map = read_map(map_fd);
-	if (!papp->map || !check_map(papp->map))
-	{
-		lp_dprintf(2, "BAD MAP\n");
-		return (false);
-	}
-	if (!set_player_coordinates(papp))
-	{
-		lp_dprintf(2, "PLAYER NOT FOUND\n");
-		return (false);
-	}
+	close(map_fd);
+	papp->player = get_player_coordinates(papp->map);
+	if (!papp->player.x && lp_dprintf(2, "PLAYER NOT FOUND\n"))
+		return (array_free(papp->map), false);
+	if (!papp->map || !check_map(papp->map, papp->player))
+		return (array_free(papp->map), (void)lp_dprintf(2, "BAD MAP\n"), false);
 	papp->mlx = mlx_init();
 	if (!papp->mlx)
 		return (array_free(papp->map), false);
-	papp->win = mlx_new_window(papp->mlx, WIN_WIDTH, WIN_HEIGHT, "fractol");
+	papp->win = mlx_new_window(papp->mlx, WIN_WIDTH, WIN_HEIGHT, "cub3d");
 	if (!papp->win)
 		return (array_free(papp->map), free(papp->mlx), false);
+	papp->win_h = WIN_HEIGHT;
+	papp->win_w = WIN_WIDTH;
+	init_minimap(papp);
 	return (true);
 }
 
