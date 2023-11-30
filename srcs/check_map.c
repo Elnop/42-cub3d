@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 17:46:08 by lperroti          #+#    #+#             */
-/*   Updated: 2023/11/30 18:11:28 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/11/30 18:49:25 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ bool	check_map(t_array map, t_coordinates player)
 	size_t			y;
 	t_array			flooded_map;
 
+	if (!player.x)
+		return (false);
 	flooded_map = array_dup(map);
 	if (!flooded_map || !flood_fill(flooded_map, player.x, player.y))
 		return (array_free(flooded_map), false);

@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:00:46 by lperroti          #+#    #+#             */
-/*   Updated: 2023/11/30 18:32:33 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/11/30 20:11:01 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,21 +45,21 @@ t_coordinates	get_player_coordinates(char **map)
 	player = (t_coordinates){0, 0};
 	while (player.y < array_size(map))
 	{
-		if (lp_strchr(map[player.y], 'N'))
-			player.x = lp_strchr(map[player.y], 'N') - map[player.y];
-		if (lp_strchr(map[player.y], 'O'))
-			player.x = lp_strchr(map[player.y], 'O') - map[player.y];
-		if (lp_strchr(map[player.y], 'W'))
-			player.x = lp_strchr(map[player.y], 'W') - map[player.y];
-		if (lp_strchr(map[player.y], 'S'))
-			player.x = lp_strchr(map[player.y], 'S') - map[player.y];
+		if (lp_strchr(map[(int)ceil(player.y)], 'N'))
+			player.x = lp_strchr(map[(int)ceil(player.y)], 'N') - map[(int)ceil(player.y)];
+		if (lp_strchr(map[(int)ceil(player.y)], 'O'))
+			player.x = lp_strchr(map[(int)ceil(player.y)], 'O') - map[(int)ceil(player.y)];
+		if (lp_strchr(map[(int)ceil(player.y)], 'W'))
+			player.x = lp_strchr(map[(int)ceil(player.y)], 'W') - map[(int)ceil(player.y)];
+		if (lp_strchr(map[(int)ceil(player.y)], 'S'))
+			player.x = lp_strchr(map[(int)ceil(player.y)], 'S') - map[(int)ceil(player.y)];
 		if (player.x)
 			break ;
 		player.y++;
 	}
 	if (!player.x)
 		return ((t_coordinates){});
-	((char **)map)[player.y][player.x] = '0';
+	((char **)map)[(int)ceil(player.y)][(int)ceil(player.x)] = '0';
 	if (get_player_coordinates(map).x)
 		return ((t_coordinates){});
 	return (player);
@@ -70,9 +70,9 @@ void	init_minimap(t_app *papp)
 		papp->mini_map_h = (float)papp->win_h * MAP_SIZE;
 		papp->mini_map_w = (float)papp->win_w * MAP_SIZE;
 		papp->mini_map_tile_h
-		= papp->mini_map_h / array_size(((char **)papp->map));
+		= ceil((double)papp->mini_map_h / array_size(((char **)papp->map)));
 		papp->mini_map_tile_w
-		= papp->mini_map_w / lp_strlen(((char **)papp->map)[0]);
+		= ceil((double)papp->mini_map_w / lp_strlen(((char **)papp->map)[0]));
 }
 
 bool	init(int ac, char **av, t_app *papp)
@@ -87,6 +87,7 @@ bool	init(int ac, char **av, t_app *papp)
 	papp->map = read_map(map_fd);
 	close(map_fd);
 	papp->player = get_player_coordinates(papp->map);
+	papp->player_dir = 0;
 	if (!papp->player.x && lp_dprintf(2, "PLAYER NOT FOUND\n"))
 		return (array_free(papp->map), false);
 	if (!papp->map || !check_map(papp->map, papp->player))
@@ -100,6 +101,7 @@ bool	init(int ac, char **av, t_app *papp)
 	papp->win_h = WIN_HEIGHT;
 	papp->win_w = WIN_WIDTH;
 	init_minimap(papp);
+	init_hooks(papp);
 	return (true);
 }
 

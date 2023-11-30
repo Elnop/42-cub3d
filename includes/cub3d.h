@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:01:40 by lperroti          #+#    #+#             */
-/*   Updated: 2023/11/30 17:54:52 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/11/30 23:02:17 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,14 @@
 # define WIN_HEIGHT 700
 # define WIN_WIDTH 1200
 # define MAP_SIZE 0.3
+# define MOVE_STEP 1
+# define ROTATE_STEP 0.1
 
 # define HELPER "./cub3d <map file>\n"
 
 typedef struct s_coordinates {
-	size_t	x;
-	size_t	y;
+	double	x;
+	double	y;
 }	t_coordinates;
 
 typedef struct s_image {
@@ -58,6 +60,8 @@ typedef union s_color {
 typedef struct s_app {
 	t_array			map;
 	t_coordinates	player;
+	double			player_dir;
+	bool			keys[6];
 	void			*mlx;
 	void			*win;
 	size_t			win_h;
@@ -76,5 +80,7 @@ void	image_put_px(t_image img, int x, int y, int color);
 int		image_get_px_color(t_image img, int x, int y);
 bool	draw_map(t_app *papp, t_image win_image);
 void	draw_minimap(t_app *papp, t_image win_image);
+int		destroy_and_exit(t_app *papp);
+void	init_hooks(t_app *papp);
 
 #endif
