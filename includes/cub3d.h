@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:01:40 by lperroti          #+#    #+#             */
-/*   Updated: 2023/11/30 23:02:17 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/03 02:54:13 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # define WIN_WIDTH 1200
 # define MAP_SIZE 0.3
 # define MOVE_STEP 1
-# define ROTATE_STEP 0.1
+# define ROTATE_STEP 0.0625
 
 # define HELPER "./cub3d <map file>\n"
 
@@ -66,8 +66,8 @@ typedef struct s_app {
 	void			*win;
 	size_t			win_h;
 	size_t			win_w;
-	size_t			mini_map_tile_h;
-	size_t			mini_map_tile_w;
+	double			mini_map_tile_h;
+	double			mini_map_tile_w;
 	size_t			mini_map_h;
 	size_t			mini_map_w;
 }	t_app;

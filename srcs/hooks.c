@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 18:33:46 by lperroti          #+#    #+#             */
-/*   Updated: 2023/11/30 23:03:49 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/03 02:50:54 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,18 @@ static int	hooks_handler(int kc, t_app *papp)
 	if (kc == XK_a
 		&& ((char **)papp->map)[(int)floor(papp->player.y)][(int)floor(papp->player.x - MOVE_STEP)] == '0')
 		papp->player.x -= MOVE_STEP;
-	if (kc == XK_Left
-		&& ((char **)papp->map)[(int)floor(papp->player.y)][(int)floor(papp->player.x - MOVE_STEP)] == '0')
-		papp->player_dir = fabs(papp->player_dir - 2 * M_PI * ROTATE_STEP);
+	if (kc == XK_Right)
+	{
+		papp->player_dir -= 2 * M_PI * ROTATE_STEP;
+		if (papp->player_dir < -M_PI)
+			papp->player_dir += 2 * M_PI;
+	}
+	if (kc == XK_Left)
+	{
+		papp->player_dir += 2 * M_PI * ROTATE_STEP;
+		if (papp->player_dir > M_PI)
+			papp->player_dir -= 2 * M_PI;
+	}
 	return (1);
 }
 

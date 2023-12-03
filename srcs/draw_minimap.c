@@ -6,44 +6,38 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 00:26:30 by lperroti          #+#    #+#             */
-/*   Updated: 2023/11/30 22:01:58 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/03 02:57:09 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 #include <stddef.h>
 
-void	draw_line(t_image win_image, size_t x0, size_t y0, size_t x1, size_t y1, int color)
-{
-	bool	steep = false; 
-	if (x0-x1 < y0-y1) {
-		lp_memswap(&x0, &y0, sizeof(size_t));
-		lp_memswap(&x1, &y1, sizeof(size_t));
-        steep = true; 
-    } 
-    if (x0>x1) { 
-        lp_memswap(&x0, &x1, sizeof(size_t)); 
-        lp_memswap(&y0, &y1, sizeof(size_t)); 
-    } 
-    size_t dx = x1-x0;
-    size_t dy = y1-y0;
-    float derror = dy/(float)dx;
-    float error = 0;
-    size_t y = y0;
-    for (size_t x=x0; x<=x1; x++) {
-        if (steep) { 
-            image_put_px(win_image, y, x, color);
-        } else { 
-            image_put_px(win_image, x, y, color);
 
-        } 
-        error += derror; 
-        if (error>.5) { 
-            y += (y1>y0?1:-1); 
-            error -= 1.; 
+void draw_line(t_image win_image, t_coordinates s, t_coordinates e, int color) {
+    int dx = abs((int)e.x - (int)s.x);
+    int dy = abs((int)e.y - (int)s.y);
+    int sx = (s.x < e.x) ? 1 : -1;
+    int sy = (s.y < e.y) ? 1 : -1;
+    int err = dx - dy;
+
+    while (1) {
+        image_put_px(win_image, s.x, s.y, color);
+
+        if (s.x == e.x && s.y == e.y) {
+            break;
+        }
+
+        int e2 = 2 * err;
+        if (e2 > -dy) {
+            err -= dy;
+            s.x += sx;
+        }
+        if (e2 < dx) {
+            err += dx;
+            s.y += sy;
         }
     }
-
 }
 
 void	draw_rect(t_image win_image, size_t start_x, size_t start_y, size_t width, size_t height, int color)
@@ -62,6 +56,43 @@ void	draw_rect(t_image win_image, size_t start_x, size_t start_y, size_t width, 
 		}
 		y++;
 	}
+}
+
+t_coordinates	get_first_wall(char **map, t_coordinates origin, double angle)
+{
+	double			len;
+	t_coordinates	wall;
+
+	len = 1;
+	printf("-----------------------------------\n");
+	printf("origin [ %f : %f ] %f\n", origin.x, origin.y, angle);
+	wall = (t_coordinates){origin.x + len * cos(angle),
+		origin.y + len * -sin(angle)};
+	printf("[ %f : %f ] %f\n", wall.x, wall.y, angle);
+	while (map[(int)ceil(wall.y)][(int)ceil(wall.x)] != '1')
+	{
+		len++;
+		wall = (t_coordinates){origin.x + len * cos(angle),
+			origin.y + len * -sin(angle)};
+		printf("[ %f : %f ] %f\n", wall.x, wall.y, angle);
+	}
+	return (wall);
+}
+
+void	draw_rays(t_app *papp, t_image img)
+{
+	t_coordinates	wall;
+
+	wall = get_first_wall(papp->map, papp->player, papp->player_dir);
+	printf("wall : [ %f : %f ] angle %f\n", wall.x, wall.y, papp->player_dir);
+	draw_line(img,
+		(t_coordinates){
+		ceil(papp->player.x * papp->mini_map_tile_w + papp->mini_map_tile_w / 2) + 10,
+		ceil(papp->player.y * papp->mini_map_tile_h + papp->mini_map_tile_h / 2) + 10},
+		(t_coordinates){
+		ceil(wall.x * papp->mini_map_tile_w + papp->mini_map_tile_w / 2) + 10,
+		ceil(wall.y * papp->mini_map_tile_h + papp->mini_map_tile_h / 2) + 10},
+		0xFF);
 }
 
 void	draw_minimap(t_app *papp, t_image win_image)
@@ -90,5 +121,5 @@ void	draw_minimap(t_app *papp, t_image win_image)
 	draw_rect(win_image, papp->player.x * papp->mini_map_tile_w + 10,
 		papp->player.y * papp->mini_map_tile_h + 10, papp->mini_map_tile_w,
 		papp->mini_map_tile_h, 0xFFFF);
-	draw_line(win_image, ceil(papp->player.x * papp->mini_map_tile_w + papp->mini_map_tile_w / 2) + 10, ceil(papp->player.y * papp->mini_map_tile_h + papp->mini_map_tile_h / 2) + 10, ceil(papp->player.x * papp->mini_map_tile_w + papp->mini_map_tile_w / 2) + 10, 10 + papp->mini_map_tile_h, 0xFF);
+	draw_rays(papp, win_image);
 }
