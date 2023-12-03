@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 00:26:30 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/03 02:57:09 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/03 05:55:19 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,13 @@ t_coordinates	get_first_wall(char **map, t_coordinates origin, double angle)
 	t_coordinates	wall;
 
 	len = 1;
-	printf("-----------------------------------\n");
-	printf("origin [ %f : %f ] %f\n", origin.x, origin.y, angle);
 	wall = (t_coordinates){origin.x + len * cos(angle),
 		origin.y + len * -sin(angle)};
-	printf("[ %f : %f ] %f\n", wall.x, wall.y, angle);
-	while (map[(int)ceil(wall.y)][(int)ceil(wall.x)] != '1')
+	while (map[(int)floor(wall.y)][(int)floor(wall.x)] != '1')
 	{
 		len++;
 		wall = (t_coordinates){origin.x + len * cos(angle),
 			origin.y + len * -sin(angle)};
-		printf("[ %f : %f ] %f\n", wall.x, wall.y, angle);
 	}
 	return (wall);
 }
@@ -82,17 +78,24 @@ t_coordinates	get_first_wall(char **map, t_coordinates origin, double angle)
 void	draw_rays(t_app *papp, t_image img)
 {
 	t_coordinates	wall;
+	double			i;
+	double			angle;
 
-	wall = get_first_wall(papp->map, papp->player, papp->player_dir);
-	printf("wall : [ %f : %f ] angle %f\n", wall.x, wall.y, papp->player_dir);
-	draw_line(img,
-		(t_coordinates){
-		ceil(papp->player.x * papp->mini_map_tile_w + papp->mini_map_tile_w / 2) + 10,
-		ceil(papp->player.y * papp->mini_map_tile_h + papp->mini_map_tile_h / 2) + 10},
-		(t_coordinates){
-		ceil(wall.x * papp->mini_map_tile_w + papp->mini_map_tile_w / 2) + 10,
-		ceil(wall.y * papp->mini_map_tile_h + papp->mini_map_tile_h / 2) + 10},
-		0xFF);
+	i = -(FOV * M_PI) / 2;
+	while (i < (FOV * M_PI) / 2)
+	{
+		angle = i + papp->player_dir;
+		wall = get_first_wall(papp->map, papp->player, angle);
+		draw_line(img,
+			(t_coordinates){
+			ceil(papp->player.x * papp->mini_map_tile_w + papp->mini_map_tile_w / 2) + 10,
+			ceil(papp->player.y * papp->mini_map_tile_h + papp->mini_map_tile_h / 2) + 10},
+			(t_coordinates){
+			ceil(wall.x * papp->mini_map_tile_w) + 10,
+			ceil(wall.y * papp->mini_map_tile_h) + 10},
+			0xFF);
+		i += 0.001;
+	}
 }
 
 void	draw_minimap(t_app *papp, t_image win_image)

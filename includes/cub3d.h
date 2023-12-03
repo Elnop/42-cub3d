@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:01:40 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/03 02:54:13 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/03 05:18:07 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # define MAP_SIZE 0.3
 # define MOVE_STEP 1
 # define ROTATE_STEP 0.0625
+# define FOV 0.25
 
 # define HELPER "./cub3d <map file>\n"
 
