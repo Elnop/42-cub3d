@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 00:26:30 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/03 05:55:19 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/03 06:21:24 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ t_coordinates	get_first_wall(char **map, t_coordinates origin, double angle)
 	double			len;
 	t_coordinates	wall;
 
-	len = 1;
+	len = 0.001;
 	wall = (t_coordinates){origin.x + len * cos(angle),
 		origin.y + len * -sin(angle)};
 	while (map[(int)floor(wall.y)][(int)floor(wall.x)] != '1')
