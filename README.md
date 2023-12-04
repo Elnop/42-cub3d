@@ -1,24 +1,24 @@
 # CUB3D
 
-# INSTALL
+## DOWNLOAD
 
 ```bash
 git clone --recurse-submodules https://github.com/Elnop/42-cub3d.git 42-lperroti-cub3d
 cd ./42-lperroti-cub3d
 make
 ```
- # START
+## START
  
 ```bash
 ./cub3d
 ```
-# SRCS
+## SRCS
 
-- (Doc Raycasting)[https://lodev.org/cgtutor/raycasting.html]
+- [Doc Raycasting](https://lodev.org/cgtutor/raycasting.html)
 
-# VALGRIND
+## VALGRIND
 
-show program problems with valgrind
+show program problems with [valgrind](https://valgrind.org/)
 
 flags for cud3d
 
