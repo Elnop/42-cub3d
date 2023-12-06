@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:01:40 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/03 05:18:07 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/04 04:06:20 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@
 # define MAP_SIZE 0.3
 # define MOVE_STEP 1
 # define ROTATE_STEP 0.0625
-# define FOV 0.25
+# define FOV 0.25 // FRACTION OF 360
 
 # define HELPER "./cub3d <map file>\n"
 
 typedef struct s_coordinates {
-	double	x;
-	double	y;
+	float	x;
+	float	y;
 }	t_coordinates;
 
 typedef struct s_image {
@@ -61,14 +61,14 @@ typedef union s_color {
 typedef struct s_app {
 	t_array			map;
 	t_coordinates	player;
-	double			player_dir;
+	float			player_dir;
 	bool			keys[6];
 	void			*mlx;
 	void			*win;
 	size_t			win_h;
 	size_t			win_w;
-	double			mini_map_tile_h;
-	double			mini_map_tile_w;
+	float			mini_map_tile_h;
+	float			mini_map_tile_w;
 	size_t			mini_map_h;
 	size_t			mini_map_w;
 }	t_app;

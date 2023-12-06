@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 00:26:30 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/03 06:21:24 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/04 04:30:30 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,17 +60,16 @@ void	draw_rect(t_image win_image, size_t start_x, size_t start_y, size_t width, 
 
 t_coordinates	get_first_wall(char **map, t_coordinates origin, double angle)
 {
-	double			len;
+	float			len;
 	t_coordinates	wall;
-
-	len = 0.001;
-	wall = (t_coordinates){origin.x + len * cos(angle),
-		origin.y + len * -sin(angle)};
+	len = .01;
+	wall = (t_coordinates){floor(origin.x) + len * cosf(angle),
+		floor(origin.y) + len * -sinf(angle)};
 	while (map[(int)floor(wall.y)][(int)floor(wall.x)] != '1')
 	{
-		len++;
-		wall = (t_coordinates){origin.x + len * cos(angle),
-			origin.y + len * -sin(angle)};
+		len += .01;
+		wall = (t_coordinates){origin.x + len * cosf(angle),
+			origin.y + len * -sinf(angle)};
 	}
 	return (wall);
 }
@@ -88,13 +87,13 @@ void	draw_rays(t_app *papp, t_image img)
 		wall = get_first_wall(papp->map, papp->player, angle);
 		draw_line(img,
 			(t_coordinates){
-			ceil(papp->player.x * papp->mini_map_tile_w + papp->mini_map_tile_w / 2) + 10,
-			ceil(papp->player.y * papp->mini_map_tile_h + papp->mini_map_tile_h / 2) + 10},
+			floor(papp->player.x * papp->mini_map_tile_w + papp->mini_map_tile_w / 2) + 10,
+			floor(papp->player.y * papp->mini_map_tile_h + papp->mini_map_tile_h / 2) + 10},
 			(t_coordinates){
-			ceil(wall.x * papp->mini_map_tile_w) + 10,
-			ceil(wall.y * papp->mini_map_tile_h) + 10},
+			floor(wall.x * papp->mini_map_tile_w) + 10,
+			floor(wall.y * papp->mini_map_tile_h) + 10},
 			0xFF);
-		i += 0.001;
+		i += 0.025;
 	}
 }
 
