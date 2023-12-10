@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:37 by lperroti          #+#    #+#             */
-/*   Updated: 2023/11/30 00:42:36 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/10 11:17:10 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ void	image_delete(void	*mlx, t_image img)
 
 void	image_put_px(t_image img, int x, int y, int color)
 {
+	if (x < 0 || y < 0 || x > WIN_WIDTH || y > WIN_HEIGHT)
+		return ;
 	img.addr += (y * img.line_length + x * (img.bits_per_pixel / 8));
 	*(int *)img.addr = color;
 }

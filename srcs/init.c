@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:00:46 by lperroti          #+#    #+#             */
-/*   Updated: 2023/11/30 20:11:01 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/10 05:59:12 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,9 @@ void	init_minimap(t_app *papp)
 		papp->mini_map_h = (float)papp->win_h * MAP_SIZE;
 		papp->mini_map_w = (float)papp->win_w * MAP_SIZE;
 		papp->mini_map_tile_h
-		= ceil((double)papp->mini_map_h / array_size(((char **)papp->map)));
+		= ceil((float)papp->mini_map_h / array_size(((char **)papp->map)));
 		papp->mini_map_tile_w
-		= ceil((double)papp->mini_map_w / lp_strlen(((char **)papp->map)[0]));
+		= ceil((float)papp->mini_map_w / lp_strlen(((char **)papp->map)[0]));
 }
 
 bool	init(int ac, char **av, t_app *papp)

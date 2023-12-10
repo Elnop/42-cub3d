@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:01:40 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/04 04:06:20 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/10 12:30:49 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,12 @@ typedef struct s_coordinates {
 	float	x;
 	float	y;
 }	t_coordinates;
+
+typedef struct s_ray_impact {
+	float	x;
+	float	y;
+	float	dist;
+}	t_ray_impact;
 
 typedef struct s_image {
 	void	*img;
