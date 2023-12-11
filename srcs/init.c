@@ -6,11 +6,12 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:00:46 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/10 05:59:12 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/11 21:30:31 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
+#include <math.h>
 #include <stdio.h>
 
 t_array	read_map(int map_fd)
@@ -38,40 +39,59 @@ t_array	read_map(int map_fd)
 	return (map);
 }
 
-t_coordinates	get_player_coordinates(char **map)
+bool	set_player(t_app *papp, float x, float y, char cardinal)
 {
-	t_coordinates	player;
+	if (papp->p.x)
+		return (false);
+	((char **)papp->map)[(int)y][(int)x] = '0';
+	papp->p.x = x;
+	papp->p.y = y;
+	if (cardinal == 'N')
+		papp->p_dir = - M_PI / 2;
+	if (cardinal == 'S')
+		papp->p_dir = M_PI / 2;
+	if (cardinal == 'E')
+		papp->p_dir = 0;
+	if (cardinal == 'W')
+		papp->p_dir = - M_PI;
+	return (true);
+}
 
-	player = (t_coordinates){0, 0};
-	while (player.y < array_size(map))
+bool	init_player(t_app *papp)
+{
+	float	y;
+
+	y = 0;
+	while (y < array_size(papp->map))
 	{
-		if (lp_strchr(map[(int)ceil(player.y)], 'N'))
-			player.x = lp_strchr(map[(int)ceil(player.y)], 'N') - map[(int)ceil(player.y)];
-		if (lp_strchr(map[(int)ceil(player.y)], 'O'))
-			player.x = lp_strchr(map[(int)ceil(player.y)], 'O') - map[(int)ceil(player.y)];
-		if (lp_strchr(map[(int)ceil(player.y)], 'W'))
-			player.x = lp_strchr(map[(int)ceil(player.y)], 'W') - map[(int)ceil(player.y)];
-		if (lp_strchr(map[(int)ceil(player.y)], 'S'))
-			player.x = lp_strchr(map[(int)ceil(player.y)], 'S') - map[(int)ceil(player.y)];
-		if (player.x)
-			break ;
-		player.y++;
+		if (lp_strchr(((char **)papp->map)[(int)y], 'N'))
+			return (set_player(papp,
+					lp_strchr(((char **)papp->map)[(int)y], 'N')
+				- ((char **)papp->map)[(int)y], y, 'N'));
+		if (lp_strchr(((char **)papp->map)[(int)y], 'O'))
+			return (set_player(papp,
+					lp_strchr(((char **)papp->map)[(int)y], 'O')
+				- ((char **)papp->map)[(int)y], y, 'O'));
+		if (lp_strchr(((char **)papp->map)[(int)y], 'W'))
+			return (set_player(papp,
+					lp_strchr(((char **)papp->map)[(int)y], 'W')
+				- ((char **)papp->map)[(int)y], y, 'W'));
+		if (lp_strchr(((char **)papp->map)[(int)y], 'S'))
+			return (set_player(papp,
+					lp_strchr(((char **)papp->map)[(int)y], 'S')
+				- ((char **)papp->map)[(int)y], y, 'S'));
+		y++;
 	}
-	if (!player.x)
-		return ((t_coordinates){});
-	((char **)map)[(int)ceil(player.y)][(int)ceil(player.x)] = '0';
-	if (get_player_coordinates(map).x)
-		return ((t_coordinates){});
-	return (player);
+	return (false);
 }
 
 void	init_minimap(t_app *papp)
 {
 		papp->mini_map_h = (float)papp->win_h * MAP_SIZE;
 		papp->mini_map_w = (float)papp->win_w * MAP_SIZE;
-		papp->mini_map_tile_h
+		papp->tile_h
 		= ceil((float)papp->mini_map_h / array_size(((char **)papp->map)));
-		papp->mini_map_tile_w
+		papp->tile_w
 		= ceil((float)papp->mini_map_w / lp_strlen(((char **)papp->map)[0]));
 }
 
@@ -86,11 +106,10 @@ bool	init(int ac, char **av, t_app *papp)
 		return (false);
 	papp->map = read_map(map_fd);
 	close(map_fd);
-	papp->player = get_player_coordinates(papp->map);
-	papp->player_dir = 0;
-	if (!papp->player.x && lp_dprintf(2, "PLAYER NOT FOUND\n"))
+	papp->p = (t_coor){};
+	if (!init_player(papp) && lp_dprintf(2, "PLAYER NOT FOUND\n"))
 		return (array_free(papp->map), false);
-	if (!papp->map || !check_map(papp->map, papp->player))
+	if (!papp->map || !check_map(papp->map, papp->p))
 		return (array_free(papp->map), (void)lp_dprintf(2, "BAD MAP\n"), false);
 	papp->mlx = mlx_init();
 	if (!papp->mlx)
@@ -104,4 +123,3 @@ bool	init(int ac, char **av, t_app *papp)
 	init_hooks(papp);
 	return (true);
 }
-

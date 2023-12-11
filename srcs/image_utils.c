@@ -6,12 +6,11 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:37 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/10 11:17:10 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/11 20:11:03 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
-#include <stddef.h>
 
 t_image	image_new(void	*mlx, size_t width, size_t height)
 {

@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:01:40 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/10 12:30:49 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/11 20:50:55 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,18 @@
 
 # define HELPER "./cub3d <map file>\n"
 
-typedef struct s_coordinates {
+typedef struct s_coor {
 	float	x;
 	float	y;
-}	t_coordinates;
+}	t_coor;
+
+typedef enum e_cardinals { N, S, E, W }	t_cardinals;
 
 typedef struct s_ray_impact {
-	float	x;
-	float	y;
-	float	dist;
+	float		x;
+	float		y;
+	float		dist;
+	int			ray_mod;
 }	t_ray_impact;
 
 typedef struct s_image {
@@ -66,28 +69,32 @@ typedef union s_color {
 
 typedef struct s_app {
 	t_array			map;
-	t_coordinates	player;
-	float			player_dir;
+	t_coor			p;
+	float			p_dir;
 	bool			keys[6];
 	void			*mlx;
 	void			*win;
 	size_t			win_h;
 	size_t			win_w;
-	float			mini_map_tile_h;
-	float			mini_map_tile_w;
+	float			tile_h;
+	float			tile_w;
 	size_t			mini_map_h;
 	size_t			mini_map_w;
 }	t_app;
 
-bool	check_map(t_array map, t_coordinates player);
-bool	init(int ac, char **av, t_app *papp);
-t_image	image_new(void	*mlx, size_t width, size_t height);
-void	image_delete(void	*mlx, t_image img);
-void	image_put_px(t_image img, int x, int y, int color);
-int		image_get_px_color(t_image img, int x, int y);
-bool	draw_map(t_app *papp, t_image win_image);
-void	draw_minimap(t_app *papp, t_image win_image);
-int		destroy_and_exit(t_app *papp);
-void	init_hooks(t_app *papp);
+bool			check_map(t_array map, t_coor p);
+bool			init(int ac, char **av, t_app *papp);
+t_image			image_new(void	*mlx, size_t width, size_t height);
+void			image_delete(void	*mlx, t_image img);
+void			image_put_px(t_image img, int x, int y, int color);
+int				image_get_px_color(t_image img, int x, int y);
+bool			draw_map(t_app *papp, t_image win_image);
+void			draw_minimap(t_app *papp, t_image win_image);
+int				destroy_and_exit(t_app *papp);
+void			init_hooks(t_app *papp);
+t_coor			rad_to_vect(float angle);
+t_ray_impact	get_first_wall(char **map, t_coor o, t_coor v);
+void			draw_line(t_image win_image, t_coor s, t_coor e, int c);
+void			draw_walls(t_app *papp, t_image img);
 
 #endif

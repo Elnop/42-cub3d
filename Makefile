@@ -3,7 +3,7 @@ NAME = cub3d
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g3
 
-FILES = main init image_utils destroy draw_minimap check_map hooks
+FILES = main init image_utils destroy draw_minimap check_map hooks utils render
 
 SRCS_DIR = srcs
 SRCS = $(addprefix $(SRCS_DIR)/, $(addsuffix .c, $(FILES)))

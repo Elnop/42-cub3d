@@ -6,39 +6,95 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 18:33:46 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/03 02:50:54 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/11 22:30:34 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
+void	go_front(t_app *papp)
+{
+	t_coor	next;
+
+	next = (t_coor){papp->p.x + MOVE_STEP * cos(papp->p_dir),
+		papp->p.y + MOVE_STEP * sin(papp->p_dir)};
+
+	printf("player %f : %f\nnext %f : %f\n\n", papp->p.x, papp->p.y, next.x, next.y);
+	if (next.y <= 0 || next.y <= 0 || next.y >= array_size(papp->map)
+		|| next.x >= lp_strlen(((char **)papp->map)[(int)next.y])
+		|| ((char **)papp->map)[(int)next.y][(int)next.x] == '1')
+		return ;
+	papp->p = next;
+}
+
+void	go_back(t_app *papp)
+{
+	t_coor	next;
+
+	next = (t_coor){papp->p.x - MOVE_STEP * cos(papp->p_dir),
+		papp->p.y - MOVE_STEP * sin(papp->p_dir)};
+
+	printf("player %f : %f\nnext %f : %f\n\n", papp->p.x, papp->p.y, next.x, next.y);
+	if (next.y <= 0 || next.y <= 0 || next.y >= array_size(papp->map)
+		|| next.x >= lp_strlen(((char **)papp->map)[(int)next.y])
+		|| ((char **)papp->map)[(int)next.y][(int)next.x] == '1')
+		return ;
+	papp->p = next;
+}
+
+void	go_left(t_app *papp)
+{
+	t_coor	next;
+
+	next = (t_coor){papp->p.x + MOVE_STEP * (1 - cos(papp->p_dir)),
+		papp->p.y - MOVE_STEP * (1 - sin(papp->p_dir))};
+
+	printf("player %f : %f\nnext %f : %f\n\n", papp->p.x, papp->p.y, next.x, next.y);
+	if (next.y <= 0 || next.y <= 0 || next.y >= array_size(papp->map)
+		|| next.x >= lp_strlen(((char **)papp->map)[(int)next.y])
+		|| ((char **)papp->map)[(int)next.y][(int)next.x] == '1')
+		return ;
+	papp->p = next;
+}
+
+void	go_right(t_app *papp)
+{
+	t_coor	next;
+
+	next = (t_coor){papp->p.x + MOVE_STEP * (1 - cos(papp->p_dir)),
+		papp->p.y + MOVE_STEP * (1 - sin(papp->p_dir))};
+
+	printf("player %f : %f\nnext %f : %f\n\n", papp->p.x, papp->p.y, next.x, next.y);
+	if (next.y <= 0 || next.y <= 0 || next.y >= array_size(papp->map)
+		|| next.x >= lp_strlen(((char **)papp->map)[(int)next.y])
+		|| ((char **)papp->map)[(int)next.y][(int)next.x] == '1')
+		return ;
+	papp->p = next;
+}
+
 static int	hooks_handler(int kc, t_app *papp)
 {
 	if (kc == XK_Escape)
 		destroy_and_exit(papp);
-	if (kc == XK_w
-		&& ((char **)papp->map)[(int)floor(papp->player.y - MOVE_STEP)][(int)floor(papp->player.x)] == '0')
-		papp->player.y -= MOVE_STEP;
-	if (kc == XK_s
-		&& ((char **)papp->map)[(int)ceil(papp->player.y + MOVE_STEP)][(int)ceil(papp->player.x)] == '0')
-		papp->player.y += MOVE_STEP;
-	if (kc == XK_d
-		&& ((char **)papp->map)[(int)ceil(papp->player.y)][(int)ceil(papp->player.x + MOVE_STEP)] == '0')
-		papp->player.x += MOVE_STEP;
-	if (kc == XK_a
-		&& ((char **)papp->map)[(int)floor(papp->player.y)][(int)floor(papp->player.x - MOVE_STEP)] == '0')
-		papp->player.x -= MOVE_STEP;
-	if (kc == XK_Right)
-	{
-		papp->player_dir -= 2 * M_PI * ROTATE_STEP;
-		if (papp->player_dir < -M_PI)
-			papp->player_dir += 2 * M_PI;
-	}
+	if (kc == XK_w)
+		go_front(papp);
+	if (kc == XK_s)
+		go_back(papp);
+	if (kc == XK_d)
+		go_right(papp);
+	if (kc == XK_a)
+		go_left(papp);
 	if (kc == XK_Left)
 	{
-		papp->player_dir += 2 * M_PI * ROTATE_STEP;
-		if (papp->player_dir > M_PI)
-			papp->player_dir -= 2 * M_PI;
+		papp->p_dir -= 2 * M_PI * ROTATE_STEP;
+		if (papp->p_dir < -M_PI)
+			papp->p_dir += 2 * M_PI;
+	}
+	if (kc == XK_Right)
+	{
+		papp->p_dir += 2 * M_PI * ROTATE_STEP;
+		if (papp->p_dir > M_PI)
+			papp->p_dir -= 2 * M_PI;
 	}
 	return (1);
 }
