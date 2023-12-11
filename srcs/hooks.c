@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 18:33:46 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/11 22:30:34 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/11 22:58:36 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	go_left(t_app *papp)
 {
 	t_coor	next;
 
-	next = (t_coor){papp->p.x + MOVE_STEP * (1 - cos(papp->p_dir)),
+	next = (t_coor){papp->p.x - MOVE_STEP * (1 - cos(papp->p_dir)),
 		papp->p.y - MOVE_STEP * (1 - sin(papp->p_dir))};
 
 	printf("player %f : %f\nnext %f : %f\n\n", papp->p.x, papp->p.y, next.x, next.y);
