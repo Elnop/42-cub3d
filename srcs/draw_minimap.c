@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 00:26:30 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/11 20:57:14 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/12 03:35:41 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,23 +33,21 @@ void	draw_rect(t_image win_image, t_coor s, t_coor lengths, int color)
 
 void	draw_rays(t_app *papp, t_image img)
 {
-	t_ray_impact	wall;
+	t_ray	wall;
 	float			i;
-	int				ray_index;
+	long			ray_index;
 	float			angle;
 
 	ray_index = 0;
 	i = -(FOV * M_PI) / 2;
-	while (i < (FOV * M_PI) / 2)
+	while (i <= (FOV * M_PI) / 2)
 	{
 		angle = i + papp->p_dir;
 		wall = get_first_wall(papp->map, papp->p, rad_to_vect(angle));
 		draw_line(img,
 			(t_coor){
-			floor(papp->p.x * papp->tile_w
-				+ papp->tile_w / 2) + 10,
-			floor(papp->p.y * papp->tile_h
-				+ papp->tile_h / 2) + 10},
+			floor(papp->p.x * papp->tile_w) + 10,
+			floor(papp->p.y * papp->tile_h) + 10},
 			(t_coor){
 			floor(wall.x * papp->tile_w) + 10,
 			floor(wall.y * papp->tile_h) + 10},
@@ -82,7 +80,7 @@ void	draw_minimap(t_app *papp, t_image win_image)
 		i.y++;
 	}
 	draw_rays(papp, win_image);
-	draw_rect(win_image, (t_coor){papp->p.x * papp->tile_w + 10,
-		papp->p.y * papp->tile_h + 10},
-		(t_coor){papp->tile_w, papp->tile_h}, 0xFFFF);
+	draw_rect(win_image, (t_coor){papp->p.x * papp->tile_w - papp->tile_w / 4 + 10,
+		papp->p.y * papp->tile_h - papp->tile_h / 4 + 10},
+		(t_coor){papp->tile_w / 2, papp->tile_h / 2}, 0xFFFF);
 }

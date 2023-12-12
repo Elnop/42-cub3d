@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:00:46 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/11 21:30:31 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/12 04:39:47 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,39 +22,20 @@ t_array	read_map(int map_fd)
 
 	map = array_new(1, sizeof(char *), array_str_copy, array_str_destroy);
 	l = get_next_line(map_fd);
+	while (!lp_isdigit(l[0]) && !lp_isdigit(l[1]))
+		l = (free(l), get_next_line(map_fd));
 	while (l)
 	{
 		if (l[lp_strlen(l) - 1] == '\n')
 		{
 			tmp = lp_substr(l, 0, lp_strlen(l) - 1);
-			free(l);
-			l = tmp;
+			l = (free(l), tmp);
 		}
 		if (!array_pushback(&map, &l))
 			return (array_free(map), NULL);
-		free(l);
-		l = get_next_line(map_fd);
+		l = (free(l), get_next_line(map_fd));
 	}
-	free(l);
-	return (map);
-}
-
-bool	set_player(t_app *papp, float x, float y, char cardinal)
-{
-	if (papp->p.x)
-		return (false);
-	((char **)papp->map)[(int)y][(int)x] = '0';
-	papp->p.x = x;
-	papp->p.y = y;
-	if (cardinal == 'N')
-		papp->p_dir = - M_PI / 2;
-	if (cardinal == 'S')
-		papp->p_dir = M_PI / 2;
-	if (cardinal == 'E')
-		papp->p_dir = 0;
-	if (cardinal == 'W')
-		papp->p_dir = - M_PI;
-	return (true);
+	return (free(l), map);
 }
 
 bool	init_player(t_app *papp)
@@ -85,6 +66,22 @@ bool	init_player(t_app *papp)
 	return (false);
 }
 
+bool	set_player(t_app *papp, float x, float y, char cardinal)
+{
+	((char **)papp->map)[(int)y][(int)x] = '0';
+	papp->p.x = x;
+	papp->p.y = y;
+	if (cardinal == 'N')
+		papp->p_dir = -M_PI / 2;
+	if (cardinal == 'S')
+		papp->p_dir = M_PI / 2;
+	if (cardinal == 'E')
+		papp->p_dir = 0;
+	if (cardinal == 'W')
+		papp->p_dir = -M_PI;
+	return (!init_player(papp));
+}
+
 void	init_minimap(t_app *papp)
 {
 		papp->mini_map_h = (float)papp->win_h * MAP_SIZE;
@@ -105,7 +102,6 @@ bool	init(int ac, char **av, t_app *papp)
 	if (map_fd == -1)
 		return (false);
 	papp->map = read_map(map_fd);
-	close(map_fd);
 	papp->p = (t_coor){};
 	if (!init_player(papp) && lp_dprintf(2, "PLAYER NOT FOUND\n"))
 		return (array_free(papp->map), false);
@@ -114,12 +110,11 @@ bool	init(int ac, char **av, t_app *papp)
 	papp->mlx = mlx_init();
 	if (!papp->mlx)
 		return (array_free(papp->map), false);
-	papp->win = mlx_new_window(papp->mlx, WIN_WIDTH, WIN_HEIGHT, "cub3d");
+	papp->win = mlx_new_window(papp->mlx, WIN_WIDTH, WIN_H, "cub3d");
 	if (!papp->win)
 		return (array_free(papp->map), free(papp->mlx), false);
-	papp->win_h = WIN_HEIGHT;
+	papp->win_h = WIN_H;
 	papp->win_w = WIN_WIDTH;
-	init_minimap(papp);
-	init_hooks(papp);
+	(init_minimap(papp), init_hooks(papp));
 	return (true);
 }
