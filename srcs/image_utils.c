@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:37 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/14 01:15:58 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/14 22:35:17 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@ t_image	image_new(void *mlx, size_t width, size_t height)
 	return (img);
 }
 
-t_texture	load_texture(void *mlx, char *filename)
+t_texture	load_tex(void *mlx, char *filename)
 {
 	t_texture	tex;
 
 	if (!filename)
 		return (lp_printf("can't load null texture\n"), (t_texture){});
-	tex.img.img = mlx_xpm_file_to_image(mlx, filename, &tex.width, &tex.height);
+	tex.img.img = mlx_xpm_file_to_image(mlx, filename, &tex.w, &tex.h);
 	if (!tex.img.img)
 		return (lp_printf("'%s' file not found\n", filename), (t_texture){});
 	tex.img.addr = mlx_get_data_addr(
@@ -54,6 +54,8 @@ void	image_delete(void	*mlx, t_image img)
 
 void	image_put_px(t_image img, int x, int y, int color)
 {
+	if (y < 0 || x < 0 || y > WIN_H || x > WIN_W)
+		return ;
 	img.addr += (y * img.line_length + x * (img.bits_per_pixel / 8));
 	*(int *)img.addr = color;
 }

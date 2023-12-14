@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 00:26:30 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/13 23:39:12 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/14 22:47:01 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,16 @@ void	draw_rect(t_image win_image, t_coor s, t_coor lengths, int color)
 void	draw_rays(t_app *papp, t_image img)
 {
 	t_ray	wall;
-	float			i;
-	long			ray_index;
-	float			angle;
+	float	i;
+	long	ray_index;
+	float	angle;
 
 	ray_index = 0;
 	i = -(FOV * M_PI) / 2;
 	while (i <= (FOV * M_PI) / 2)
 	{
 		angle = i + papp->p_dir;
-		wall = get_first_wall(papp->map, papp->p, rad_to_vect(angle));
+		wall = get_first_wall(papp->map, papp->p, angle);
 		draw_line(img,
 			(t_coor){
 			floor(papp->p.x * papp->tile_w) + 10,
@@ -57,7 +57,7 @@ void	draw_rays(t_app *papp, t_image img)
 	}
 }
 
-void	draw_minimap(t_app *papp, t_image win_image)
+void	draw_minimap(t_app *papp, t_image img)
 {
 	t_coor	i;
 
@@ -68,19 +68,20 @@ void	draw_minimap(t_app *papp, t_image win_image)
 		while (i.x < lp_strlen(((char **)papp->map)[(int)i.y]))
 		{
 			if (((char **)papp->map)[(int)i.y][(int)i.x] == '1')
-				draw_rect(win_image, (t_coor){i.x * papp->tile_w + 10,
+				draw_rect(img, (t_coor){i.x * papp->tile_w + 10,
 					i.y * papp->tile_h + 10},
 					(t_coor){papp->tile_w, papp->tile_h}, 0xFFFFFF);
 			if (((char **)papp->map)[(int)i.y][(int)i.x] == '0')
-				draw_rect(win_image, (t_coor){i.x * papp->tile_w + 10,
+				draw_rect(img, (t_coor){i.x * papp->tile_w + 10,
 					i.y * papp->tile_h + 10},
 					(t_coor){papp->tile_w, papp->tile_h}, 0x666666);
 			i.x++;
 		}
 		i.y++;
 	}
-	draw_rays(papp, win_image);
-	draw_rect(win_image, (t_coor){papp->p.x * papp->tile_w - papp->tile_w / 4 + 10,
+	draw_rays(papp, img);
+	draw_rect(img,
+		(t_coor){papp->p.x * papp->tile_w - papp->tile_w / 4 + 10,
 		papp->p.y * papp->tile_h - papp->tile_h / 4 + 10},
 		(t_coor){papp->tile_w / 2, papp->tile_h / 2}, 0xFFFF);
 }

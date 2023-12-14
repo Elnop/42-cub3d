@@ -6,12 +6,11 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 13:15:22 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/11 20:23:59 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/14 22:48:12 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
-
 
 int	draw_game(t_app *papp)
 {

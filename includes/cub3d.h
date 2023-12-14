@@ -6,14 +6,13 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:01:40 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/14 00:52:08 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/14 22:49:41 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-#include <stddef.h>
 # define XK_MISCELLANY
 # define XK_LATIN1
 # include "../libs/minilibx-linux/mlx.h"
@@ -45,6 +44,7 @@ typedef struct s_ray {
 	float		x;
 	float		y;
 	float		dist;
+	float		angle;
 	int			ray_mod;
 }	t_ray;
 
@@ -58,8 +58,8 @@ typedef struct s_image {
 
 typedef struct s_texture {
 	t_image	img;
-	int		height;
-	int		width;
+	int		h;
+	int		w;
 }	t_texture;
 
 typedef union s_color {
@@ -106,9 +106,15 @@ void			draw_minimap(t_app *papp, t_image win_image);
 int				destroy_and_exit(t_app *papp);
 void			init_hooks(t_app *papp);
 t_coor			rad_to_vect(float angle);
-t_ray			get_first_wall(char **map, t_coor o, t_coor v);
+t_ray			get_first_wall(char **map, t_coor o, float angle);
 void			draw_line(t_image win_image, t_coor s, t_coor e, int c);
 void			draw_walls(t_app *papp, t_image img);
-t_texture		load_texture(void *mlx, char *filename);
+t_texture		load_tex(void *mlx, char *filename);
+bool			init_textures(t_app *papp, int map_fd);
+bool			init_map(t_app *papp, char *filename);
+void			go_front(t_app *papp);
+void			go_back(t_app *papp);
+void			go_left(t_app *papp);
+void			go_right(t_app *papp);
 
 #endif
