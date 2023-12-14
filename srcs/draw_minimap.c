@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 00:26:30 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/12 03:35:41 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/13 23:39:12 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	draw_rays(t_app *papp, t_image img)
 			floor(wall.x * papp->tile_w) + 10,
 			floor(wall.y * papp->tile_h) + 10},
 			0xFF);
-		i += (FOV * M_PI) / WIN_WIDTH;
+		i += (FOV * M_PI) / WIN_W;
 		ray_index++;
 	}
 }

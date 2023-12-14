@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:00:46 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/12 04:39:47 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/14 01:14:49 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_array	read_map(int map_fd)
 
 	map = array_new(1, sizeof(char *), array_str_copy, array_str_destroy);
 	l = get_next_line(map_fd);
-	while (!lp_isdigit(l[0]) && !lp_isdigit(l[1]))
+	while (l && (lp_isalpha(l[0]) || l[0] == '\n'))
 		l = (free(l), get_next_line(map_fd));
 	while (l)
 	{
@@ -92,29 +92,85 @@ void	init_minimap(t_app *papp)
 		= ceil((float)papp->mini_map_w / lp_strlen(((char **)papp->map)[0]));
 }
 
-bool	init(int ac, char **av, t_app *papp)
+bool	init_map(t_app *papp, char *filename)
 {
 	int	map_fd;
 
-	if (ac < 2 || !av[1][0])
-		return (false);
-	map_fd = open(av[1], O_RDONLY);
+	map_fd = open(filename, O_RDONLY);
 	if (map_fd == -1)
 		return (false);
 	papp->map = read_map(map_fd);
+	close(map_fd);
+	return (true);
+}
+
+bool	init_mlx(t_app *papp)
+{
+	papp->mlx = mlx_init();
+	if (!papp->mlx)
+		return (false);
+	papp->win = mlx_new_window(papp->mlx, WIN_W, WIN_H, "cub3d");
+	if (!papp->win)
+		return (free(papp->mlx), false);
+	return (true);
+}
+
+bool	init_textures(t_app *papp, int map_fd)
+{
+	char	*l;
+
+	papp->texno.width = 0;
+	papp->texso.width = 0;
+	papp->texea.width = 0;
+	papp->texwe.width = 0;
+	l = get_next_line(map_fd);
+	while (l && (!lp_isdigit(l[0]) || l[0] != ' ' || l[0] != '\t'))
+	{
+		if (l[0] == 'N' && l[1] == 'O' && l[2] == ' ')
+			papp->texno
+				= load_texture(papp->mlx, lp_substr(l, 3, lp_strlen(l + 3) - 1));
+		if (l[0] == 'S' && l[1] == 'O' && l[2] == ' ')
+			papp->texso
+				= load_texture(papp->mlx, lp_substr(l, 3, lp_strlen(l + 3) - 1));
+		if (l[0] == 'E' && l[1] == 'A' && l[2] == ' ')
+			papp->texea
+				= load_texture(papp->mlx, lp_substr(l, 3, lp_strlen(l + 3) - 1));
+		if (l[0] == 'W' && l[1] == 'E' && l[2] == ' ')
+			papp->texwe
+				= load_texture(papp->mlx, lp_substr(l, 3, lp_strlen(l + 3) - 1));
+		l = (free(l), get_next_line(map_fd));
+	}
+	close(map_fd);
+	if (!papp->texno.width)
+		return (lp_printf("CANT LOAD NORD TEXTURE\n"), false);
+	if (!papp->texso.width)
+		return (lp_printf("CANT LOAD SOUTH TEXTURE\n"), false);
+	if (!papp->texwe.width)
+		return (lp_printf("CANT LOAD WEAST TEXTURE\n"), false);
+	if (!papp->texea.width)
+		return (lp_printf("CANT LOAD EAST TEXTURE\n"), false);
+	return (true);
+}
+
+bool	init(int ac, char **av, t_app *papp)
+{
+	if (ac < 2 || !av[1][0])
+		return (false);
+	if (!init_map(papp, av[1]))
+		return (false);
 	papp->p = (t_coor){};
 	if (!init_player(papp) && lp_dprintf(2, "PLAYER NOT FOUND\n"))
 		return (array_free(papp->map), false);
 	if (!papp->map || !check_map(papp->map, papp->p))
 		return (array_free(papp->map), (void)lp_dprintf(2, "BAD MAP\n"), false);
-	papp->mlx = mlx_init();
-	if (!papp->mlx)
+	if (!init_mlx(papp))
 		return (array_free(papp->map), false);
-	papp->win = mlx_new_window(papp->mlx, WIN_WIDTH, WIN_H, "cub3d");
+	if (!init_textures(papp, open(av[1], O_RDONLY)))
+		return (false);
 	if (!papp->win)
 		return (array_free(papp->map), free(papp->mlx), false);
 	papp->win_h = WIN_H;
-	papp->win_w = WIN_WIDTH;
+	papp->win_w = WIN_W;
 	(init_minimap(papp), init_hooks(papp));
 	return (true);
 }

@@ -6,13 +6,13 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:37 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/12 03:35:12 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/14 01:15:58 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-t_image	image_new(void	*mlx, size_t width, size_t height)
+t_image	image_new(void *mlx, size_t width, size_t height)
 {
 	t_image	img;
 
@@ -28,6 +28,24 @@ t_image	image_new(void	*mlx, size_t width, size_t height)
 	return (img);
 }
 
+t_texture	load_texture(void *mlx, char *filename)
+{
+	t_texture	tex;
+
+	if (!filename)
+		return (lp_printf("can't load null texture\n"), (t_texture){});
+	tex.img.img = mlx_xpm_file_to_image(mlx, filename, &tex.width, &tex.height);
+	if (!tex.img.img)
+		return (lp_printf("'%s' file not found\n", filename), (t_texture){});
+	tex.img.addr = mlx_get_data_addr(
+			tex.img.img,
+			&tex.img.bits_per_pixel,
+			&tex.img.line_length,
+			&tex.img.endian
+			);
+	return (tex);
+}
+
 void	image_delete(void	*mlx, t_image img)
 {
 	mlx_destroy_image(mlx, img.img);
@@ -36,8 +54,6 @@ void	image_delete(void	*mlx, t_image img)
 
 void	image_put_px(t_image img, int x, int y, int color)
 {
-	if (x < 0 || y < 0 || x > WIN_WIDTH || y > WIN_H)
-		return ;
 	img.addr += (y * img.line_length + x * (img.bits_per_pixel / 8));
 	*(int *)img.addr = color;
 }

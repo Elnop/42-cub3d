@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:01:40 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/12 04:31:37 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/14 00:52:08 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # include "../libs/liblp_c/liblp.h"
 
 # define WIN_H 700
-# define WIN_WIDTH 1200
+# define WIN_W 1200
 # define MAP_SIZE 0.3
 # define MOVE_STEP 0.25
 # define ROTATE_STEP 0.03125
@@ -56,6 +56,12 @@ typedef struct s_image {
 	int		endian;
 }	t_image;
 
+typedef struct s_texture {
+	t_image	img;
+	int		height;
+	int		width;
+}	t_texture;
+
 typedef union s_color {
 	int	hex;
 	struct
@@ -82,10 +88,10 @@ typedef struct s_app {
 	size_t			mini_map_w;
 	t_color			floor;
 	t_color			ceil;
-	void			*texno;
-	void			*texso;
-	void			*texes;
-	void			*texwe;
+	t_texture		texno;
+	t_texture		texso;
+	t_texture		texea;
+	t_texture		texwe;
 }	t_app;
 
 bool			set_player(t_app *papp, float x, float y, char cardinal);
@@ -103,5 +109,6 @@ t_coor			rad_to_vect(float angle);
 t_ray			get_first_wall(char **map, t_coor o, t_coor v);
 void			draw_line(t_image win_image, t_coor s, t_coor e, int c);
 void			draw_walls(t_app *papp, t_image img);
+t_texture		load_texture(void *mlx, char *filename);
 
 #endif

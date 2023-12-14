@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 17:46:08 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/11 20:50:17 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/13 23:03:51 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ bool	flood_fill(char **map, size_t x, size_t y)
 
 bool	check_map(t_array map, t_coor p)
 {
-	size_t			x;
-	size_t			y;
 	t_array			flooded_map;
 
 	if (!p.x)
@@ -42,17 +40,5 @@ bool	check_map(t_array map, t_coor p)
 	flooded_map = array_dup(map);
 	if (!flooded_map || !flood_fill(flooded_map, p.x, p.y))
 		return (array_free(flooded_map), false);
-	y = 0;
-	while (y < array_size(flooded_map))
-	{
-		x = 0;
-		while (x < lp_strlen(((char **)flooded_map)[y]))
-		{
-			if (((char **)flooded_map)[y][x] == '0')
-				return (array_free(flooded_map), false);
-			x++;
-		}
-		y++;
-	}
 	return (array_free(flooded_map), true);
 }
