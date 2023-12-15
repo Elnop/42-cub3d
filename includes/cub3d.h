@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:01:40 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/14 22:49:41 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/15 01:08:46 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,22 +29,22 @@
 # define MAP_SIZE 0.3
 # define MOVE_STEP 0.25
 # define ROTATE_STEP 0.03125
-# define FOV 0.43 // FRACTION OF 360
+# define FOV 0.43 // FRACTION OF 180
 # define TEXTURE_H 100
 # define TEXTURE_W 100
 
 # define HELPER "./cub3d <map file>\n"
 
 typedef struct s_coor {
-	float	x;
-	float	y;
+	double	x;
+	double	y;
 }	t_coor;
 
 typedef struct s_ray {
-	float		x;
-	float		y;
-	float		dist;
-	float		angle;
+	double		x;
+	double		y;
+	double		dist;
+	double		angle;
 	int			ray_mod;
 }	t_ray;
 
@@ -74,16 +74,16 @@ typedef union s_color {
 }	t_color;
 
 typedef struct s_app {
-	t_array			map;
+	char			**map;
 	t_coor			p;
-	float			p_dir;
+	double			p_dir;
 	bool			keys[6];
 	void			*mlx;
 	void			*win;
 	size_t			win_h;
 	size_t			win_w;
-	float			tile_h;
-	float			tile_w;
+	double			tile_h;
+	double			tile_w;
 	size_t			mini_map_h;
 	size_t			mini_map_w;
 	t_color			floor;
@@ -94,7 +94,7 @@ typedef struct s_app {
 	t_texture		texwe;
 }	t_app;
 
-bool			set_player(t_app *papp, float x, float y, char cardinal);
+bool			set_player(t_app *papp, double x, double y, char cardinal);
 bool			check_map(t_array map, t_coor p);
 bool			init(int ac, char **av, t_app *papp);
 t_image			image_new(void	*mlx, size_t width, size_t height);
@@ -105,8 +105,8 @@ bool			draw_map(t_app *papp, t_image win_image);
 void			draw_minimap(t_app *papp, t_image win_image);
 int				destroy_and_exit(t_app *papp);
 void			init_hooks(t_app *papp);
-t_coor			rad_to_vect(float angle);
-t_ray			get_first_wall(char **map, t_coor o, float angle);
+t_coor			rad_to_vect(double angle);
+t_ray			get_first_wall(char **map, t_coor o, double angle);
 void			draw_line(t_image win_image, t_coor s, t_coor e, int c);
 void			draw_walls(t_app *papp, t_image img);
 t_texture		load_tex(void *mlx, char *filename);
@@ -116,5 +116,5 @@ void			go_front(t_app *papp);
 void			go_back(t_app *papp);
 void			go_left(t_app *papp);
 void			go_right(t_app *papp);
-
+void			draw_rect(t_image img, t_coor s, t_coor lengths, int color);
 #endif

@@ -6,15 +6,15 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 20:07:10 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/14 21:23:27 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/15 01:08:46 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-t_coor	rad_to_vect(float angle)
+t_coor	rad_to_vect(double angle)
 {
-	return ((t_coor){cosf(angle), sinf(angle)});
+	return ((t_coor){cos(angle), sin(angle)});
 }
 
 void	draw_line(t_image win_image, t_coor s, t_coor e, int c)

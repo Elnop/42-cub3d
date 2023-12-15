@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 00:26:30 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/14 22:47:01 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/15 01:08:46 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ void	draw_rect(t_image win_image, t_coor s, t_coor lengths, int color)
 void	draw_rays(t_app *papp, t_image img)
 {
 	t_ray	wall;
-	float	i;
+	double	i;
 	long	ray_index;
-	float	angle;
+	double	angle;
 
 	ray_index = 0;
 	i = -(FOV * M_PI) / 2;
@@ -65,13 +65,13 @@ void	draw_minimap(t_app *papp, t_image img)
 	while (i.y < array_size(papp->map))
 	{
 		i.x = 0;
-		while (i.x < lp_strlen(((char **)papp->map)[(int)i.y]))
+		while (i.x < lp_strlen(papp->map[(int)i.y]))
 		{
-			if (((char **)papp->map)[(int)i.y][(int)i.x] == '1')
+			if (papp->map[(int)i.y][(int)i.x] == '1')
 				draw_rect(img, (t_coor){i.x * papp->tile_w + 10,
 					i.y * papp->tile_h + 10},
 					(t_coor){papp->tile_w, papp->tile_h}, 0xFFFFFF);
-			if (((char **)papp->map)[(int)i.y][(int)i.x] == '0')
+			if (papp->map[(int)i.y][(int)i.x] == '0')
 				draw_rect(img, (t_coor){i.x * papp->tile_w + 10,
 					i.y * papp->tile_h + 10},
 					(t_coor){papp->tile_w, papp->tile_h}, 0x666666);
