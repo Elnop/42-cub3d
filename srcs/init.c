@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:00:46 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/15 01:08:46 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/16 02:35:16 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ bool	init_player(t_app *papp)
 bool	set_player(t_app *papp, double x, double y, char cardinal)
 {
 	papp->map[(int)y][(int)x] = '0';
-	papp->p.x = x;
-	papp->p.y = y;
+	papp->p.x = x + 0.5;
+	papp->p.y = y + 0.5;
 	if (cardinal == 'N')
 		papp->p_dir = -M_PI / 2;
 	if (cardinal == 'S')
@@ -79,6 +79,7 @@ bool	init_mlx(t_app *papp)
 
 bool	init(int ac, char **av, t_app *papp)
 {
+	papp->plane = (t_coor){0, 0.66};
 	if (ac < 2 || !av[1][0])
 		return (false);
 	if (!init_map(papp, av[1]))
@@ -91,7 +92,7 @@ bool	init(int ac, char **av, t_app *papp)
 	if (!init_mlx(papp))
 		return (array_free(papp->map), false);
 	if (!init_textures(papp, open(av[1], O_RDONLY)))
-		return (false);
+		return (destroy_and_exit(papp), false);
 	if (!papp->win)
 		return (array_free(papp->map), free(papp->mlx), false);
 	papp->win_h = WIN_H;

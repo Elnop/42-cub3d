@@ -1,10 +1,10 @@
-NO ./assets/n.xpm
-SO ./assets/s.xpm
-WE ./assets/w.xpm
-EA ./assets/e.xpm
+NO ./assets/wall1.xpm
+SO ./assets/wall2.xpm
+WE ./assets/wall3.xpm
+EA ./assets/wall4.xpm
 
-F 220,100,0
-C 225,30,0
+C 40,40,40
+F 125,125,125
 
  11111                  11111
 100000111111111111111111000001

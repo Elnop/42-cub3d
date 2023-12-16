@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 00:26:30 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/15 01:08:46 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/16 02:14:10 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,14 @@ void	draw_rays(t_app *papp, t_image img)
 	while (i <= (FOV * M_PI) / 2)
 	{
 		angle = i + papp->p_dir;
-		wall = get_first_wall(papp->map, papp->p, angle);
+		wall = get_first_wall(papp, papp->p, angle);
 		draw_line(img,
 			(t_coor){
 			floor(papp->p.x * papp->tile_w) + 10,
 			floor(papp->p.y * papp->tile_h) + 10},
 			(t_coor){
-			floor(wall.x * papp->tile_w) + 10,
-			floor(wall.y * papp->tile_h) + 10},
+			floor(wall.x * papp->tile_w + papp->tile_w / 2) + 10,
+			floor(wall.y * papp->tile_h + papp->tile_h / 2) + 10},
 			0xFF);
 		i += (FOV * M_PI) / WIN_W;
 		ray_index++;
@@ -81,7 +81,7 @@ void	draw_minimap(t_app *papp, t_image img)
 	}
 	draw_rays(papp, img);
 	draw_rect(img,
-		(t_coor){papp->p.x * papp->tile_w - papp->tile_w / 4 + 10,
-		papp->p.y * papp->tile_h - papp->tile_h / 4 + 10},
-		(t_coor){papp->tile_w / 2, papp->tile_h / 2}, 0xFFFF);
+		(t_coor){papp->p.x * papp->tile_w - papp->tile_w * MOVE_STEP / 2 + 10,
+		papp->p.y * papp->tile_h - papp->tile_h * MOVE_STEP / 2 + 10},
+		(t_coor){papp->tile_w * MOVE_STEP, papp->tile_h * MOVE_STEP}, 0xFFFF);
 }

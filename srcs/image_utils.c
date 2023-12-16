@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:37 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/14 22:35:17 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/16 00:35:20 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,27 +28,28 @@ t_image	image_new(void *mlx, size_t width, size_t height)
 	return (img);
 }
 
-t_texture	load_tex(void *mlx, char *filename)
+t_texture	load_tex(void *mlx, char *fn)
 {
 	t_texture	tex;
 
-	if (!filename)
+	if (!fn)
 		return (lp_printf("can't load null texture\n"), (t_texture){});
-	tex.img.img = mlx_xpm_file_to_image(mlx, filename, &tex.w, &tex.h);
+	tex.img.img = mlx_xpm_file_to_image(mlx, fn, &tex.w, &tex.h);
 	if (!tex.img.img)
-		return (lp_printf("'%s' file not found\n", filename), (t_texture){});
+		return (lp_printf("'%s' file not found\n", fn), free(fn), (t_texture){});
 	tex.img.addr = mlx_get_data_addr(
 			tex.img.img,
 			&tex.img.bits_per_pixel,
 			&tex.img.line_length,
 			&tex.img.endian
 			);
-	return (tex);
+	return (free(fn), tex);
 }
 
 void	image_delete(void	*mlx, t_image img)
 {
-	mlx_destroy_image(mlx, img.img);
+	if (img.img)
+		mlx_destroy_image(mlx, img.img);
 	img = (t_image){};
 }
 

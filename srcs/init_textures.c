@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 22:20:50 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/14 23:22:06 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/16 00:33:03 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,10 @@ bool	init_textures(t_app *papp, int map_fd)
 {
 	char	*l;
 
-	papp->texno.w = 0;
-	papp->texso.w = 0;
-	papp->texea.w = 0;
-	papp->texwe.w = 0;
+	papp->texno = (t_texture){};
+	papp->texso = (t_texture){};
+	papp->texea = (t_texture){};
+	papp->texwe = (t_texture){};
 	l = get_next_line(map_fd);
 	while (l && (!lp_isdigit(l[0]) || l[0] != ' ' || l[0] != '\t'))
 	{

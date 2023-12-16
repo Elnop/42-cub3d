@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:01:40 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/15 01:08:46 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/16 02:33:14 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@
 # define WIN_H 700
 # define WIN_W 1200
 # define MAP_SIZE 0.3
-# define MOVE_STEP 0.25
+# define MOVE_STEP 0.10
 # define ROTATE_STEP 0.03125
-# define FOV 0.43 // FRACTION OF 180
+# define FOV 0.36 // FRACTION OF 180
 # define TEXTURE_H 100
 # define TEXTURE_W 100
 
@@ -92,6 +92,8 @@ typedef struct s_app {
 	t_texture		texso;
 	t_texture		texea;
 	t_texture		texwe;
+	size_t			ray_i;
+	t_coor			plane;
 }	t_app;
 
 bool			set_player(t_app *papp, double x, double y, char cardinal);
@@ -105,8 +107,8 @@ bool			draw_map(t_app *papp, t_image win_image);
 void			draw_minimap(t_app *papp, t_image win_image);
 int				destroy_and_exit(t_app *papp);
 void			init_hooks(t_app *papp);
-t_coor			rad_to_vect(double angle);
-t_ray			get_first_wall(char **map, t_coor o, double angle);
+t_coor			rad_to_vect(double angle, t_app *papp);
+t_ray			get_first_wall(t_app *papp, t_coor o, double angle);
 void			draw_line(t_image win_image, t_coor s, t_coor e, int c);
 void			draw_walls(t_app *papp, t_image img);
 t_texture		load_tex(void *mlx, char *filename);
