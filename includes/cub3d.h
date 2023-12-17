@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:01:40 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/16 02:33:14 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/17 05:27:25 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,10 @@ typedef struct s_coor {
 }	t_coor;
 
 typedef struct s_ray {
-	double		x;
-	double		y;
+	double		wx;
+	double		wy;
+	double		ox;
+	double		oy;
 	double		dist;
 	double		angle;
 	int			ray_mod;
@@ -107,7 +109,7 @@ bool			draw_map(t_app *papp, t_image win_image);
 void			draw_minimap(t_app *papp, t_image win_image);
 int				destroy_and_exit(t_app *papp);
 void			init_hooks(t_app *papp);
-t_coor			rad_to_vect(double angle, t_app *papp);
+t_coor			rad_to_vect(double angle);
 t_ray			get_first_wall(t_app *papp, t_coor o, double angle);
 void			draw_line(t_image win_image, t_coor s, t_coor e, int c);
 void			draw_walls(t_app *papp, t_image img);
@@ -119,4 +121,6 @@ void			go_back(t_app *papp);
 void			go_left(t_app *papp);
 void			go_right(t_app *papp);
 void			draw_rect(t_image img, t_coor s, t_coor lengths, int color);
+bool			init_player(t_app *papp);
+t_array			ray_cast(t_app *papp);
 #endif

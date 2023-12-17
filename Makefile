@@ -3,13 +3,29 @@ NAME = cub3d
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g3
 
-FILES = main init image_utils destroy draw_minimap check_map hooks utils draw_walls ray_casting init_textures init_map move_hooks
+FILES = main \
+		init/init \
+		init/init_player \
+		init/init_map \
+		init/check_map \
+		init/init_textures \
+		render/draw_minimap \
+		render/draw_walls \
+		render/ray_casting \
+		hooks/hooks \
+		hooks/move_hooks \
+		utils/image_utils \
+		utils/destroy \
+		utils/utils
 
 SRCS_DIR = srcs
 SRCS = $(addprefix $(SRCS_DIR)/, $(addsuffix .c, $(FILES)))
 
 OBJS_DIR = .obj
 OBJS = ${patsubst ${SRCS_DIR}/%.c, ${OBJS_DIR}/%.o, ${SRCS}}
+
+DIRS = init render hooks utils
+DIRS_TO_MK = $(addprefix $(OBJS_DIR)/, $(DIRS))
 
 LIBS_FOLDER = libs
 
@@ -31,7 +47,7 @@ $(NAME): $(LIBS) $(OBJS)
 	$(CC) $(OBJS) $(LIBS) -lm -lXext -lX11 -o $@
 
 ${OBJS_DIR}/%.o: ${SRCS_DIR}/%.c $(INCLUDES)
-	@mkdir -p $(OBJS_DIR)
+	@mkdir -p $(OBJS_DIR) $(DIRS_TO_MK)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 clean: cleanlibs
