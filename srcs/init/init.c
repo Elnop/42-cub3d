@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:00:46 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/17 03:39:16 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/18 13:54:20 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ bool	init(int ac, char **av, t_app *papp)
 		return (false);
 	if (!init_map(papp, av[1]))
 		return (false);
-	papp->p = (t_coor){};
+	papp->p = (t_coo){};
 	if (!init_player(papp) && lp_dprintf(2, "PLAYER NOT FOUND\n"))
 		return (array_free(papp->map), false);
 	if (!papp->map || !check_map(papp->map, papp->p))
