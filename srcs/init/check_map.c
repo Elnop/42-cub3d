@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 17:46:08 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/18 13:54:20 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/18 19:17:48 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ bool	flood_fill(char **map, size_t x, size_t y)
 	return (true);
 }
 
-bool	check_map(t_array map, t_coo p)
+bool	check_map(t_array map, t_xy p)
 {
 	t_array			flooded_map;
 

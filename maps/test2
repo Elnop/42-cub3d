@@ -1,10 +1,10 @@
-NO ./assets/wall1.xpm
-SO ./assets/wall2.xpm
-WE ./assets/wall3.xpm
-EA ./assets/wall4.xpm
+NO ./assets/buisson.xpm
+SO ./assets/buisson.xpm
+WE ./assets/buisson.xpm
+EA ./assets/buisson.xpm
 
-C 40,40,40
-F 125,125,125
+C 0,247,255
+F 106,181,7
 
  11111                  11111
 100000111111111111111111000001

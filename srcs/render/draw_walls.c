@@ -6,72 +6,88 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 20:10:37 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/18 15:09:07 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/19 04:10:34 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
+#include <stddef.h>
+#include <stdio.h>
+
+size_t	get_tex_x(t_app *papp, t_ray ray, t_texture tex)
+{
+	if (ray.is_vertical)
+	{
+		if (papp->p.x > ray.impact.x)
+			return (((int)ray.wall.y - ray.impact.y) * (double)tex.w);
+		return ((ray.impact.y - (int)ray.wall.y) * (double)tex.w);
+	}
+	else
+	{
+		if (papp->p.y > ray.impact.y)
+			return ((ray.impact.x - (int)ray.wall.x) * (double)tex.w);
+		return (((int)ray.wall.x - ray.impact.x) * (double)tex.w);
+	}
+}
 
 t_texture	get_texture(t_app *papp, t_ray ray)
 {
-	if (ray.ray_mod)
+	if (ray.is_vertical)
 	{
-		if (papp->p.x > ray.wx)
+		if (papp->p.x > ray.impact.x)
 			return (papp->texwe);
 		else
 			return (papp->texea);
 	}
 	else
 	{
-		if (papp->p.y > ray.wy)
+		if (papp->p.y > ray.impact.y)
 			return (papp->texno);
 		else
 			return (papp->texso);
 	}
 }
 
-void	draw_wall(t_app *papp, t_ray *rays, size_t *i, t_image img)
+void	draw_wall(t_app *papp, t_image img, size_t ray_start, size_t ray_end)
 {
-	t_coo		pos;
-	t_coo		s;
-	t_texture	t;
-	size_t		end_wall;
-	long		wall_h;
+	const t_texture	tex = get_texture(papp, papp->rays[ray_start]);
+	long			wall_h;
+	t_xy			i;
+	double			ratio_y;
+	size_t			tex_x;
 
-	t = get_texture(papp, rays[*i]);
-	end_wall = *i;
-	while (end_wall < array_size(rays) && (int)rays[*i].wx == (int)rays[end_wall].wx
-		&& (int)rays[*i].wy == (int)rays[end_wall].wy
-		&& rays[*i].ray_mod == rays[end_wall].ray_mod)
-		end_wall++;
-	pos.x = *i - 1;
-	while (pos.x < end_wall)
+	i.x = ray_start;
+	while (i.x < ray_end)
 	{
-		if (!rays[(int)pos.x].ray_mod)
-			wall_h = WIN_H / (rays[(int)pos.x].dist + (!rays[(int)pos.x].dist));
-		else
-			wall_h = WIN_H / (rays[(int)pos.x].dist + (!rays[(int)pos.x].dist));
-		s = (t_coo){(double)t.w / (end_wall - *i), (double)t.h / wall_h};
-		pos.y = -1;
-		while (++pos.y < wall_h)
-			image_put_px(img, pos.x, pos.y + WIN_H * 0.5 - wall_h * 0.5,
-				image_get_px_color(t.img, (pos.x - *i + 1) * s.x, pos.y * s.y));
-		pos.x++;
+		wall_h = WIN_H
+			/ (papp->rays[(int)i.x].len + (!papp->rays[(int)i.x].len));
+		ratio_y = (double)tex.h / wall_h;
+		tex_x = get_tex_x(papp, papp->rays[(int)i.x], tex);
+		i.y = -1;
+		while (++i.y < wall_h)
+		{
+			image_put_px(img, i.x, i.y + WIN_H * 0.5 - wall_h * 0.5,
+				image_get_px_color(tex.img, tex_x, i.y * ratio_y));
+		}
+		i.x++;
 	}
-	*i = pos.x;
 }
 
 void	draw_walls(t_app *papp, t_image img)
 {
-	size_t	i;
-	t_array	rays;
+	size_t		i;
+	size_t		j;
 
-	rays = ray_cast(papp);
 	i = 0;
-	while (i < array_size(rays))
+	while (i < array_size(papp->rays))
 	{
-		draw_wall(papp, rays, &i, img);
-		i++;
+		j = i;
+		while (j < array_size(papp->rays)
+			&& (int)papp->rays[i].wall.x == (int)papp->rays[j].wall.x
+			&& (int)papp->rays[i].wall.y == (int)papp->rays[j].wall.y
+			&& papp->rays[i].is_vertical == papp->rays[j].is_vertical)
+			j++;
+		draw_wall(papp, img, i, j);
+		i = j;
 	}
-	array_free(rays);
 }

@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 21:40:37 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/18 15:13:53 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/18 23:39:19 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,9 @@
 #include <math.h>
 #include <stdlib.h>
 
-t_array	ray_cast(t_app *papp)
+t_xy	set_deltas(t_xy v)
 {
-	t_array			rays;
-	double			angle;
-
-	rays = array_new(WIN_W, sizeof(t_ray), NULL, NULL);
-	angle = papp->p_dir -(FOV * M_PI) / 2;
-	while (angle - papp->p_dir <= (FOV * M_PI) / 2)
-	{
-		array_pushback(&rays,
-			(t_ray []){get_first_wall(papp, papp->p,
-				angle)});
-		angle += (FOV * M_PI) / WIN_W;
-	}
-	return (rays);
-}
-
-t_coo	set_deltas(t_coo v)
-{
-	t_coo	delta;
+	t_xy	delta;
 
 	if (!v.x)
 		delta.x = 1e30;
@@ -46,11 +29,11 @@ t_coo	set_deltas(t_coo v)
 	return (delta);
 }
 
-t_coo	set_side_dists(t_coo origin, t_coo dir, t_coo delta)
+t_xy	set_side_dists(t_xy origin, t_xy dir, t_xy delta)
 {
-	t_coo	side_dist;
+	t_xy	side_dist;
 
-	side_dist = (t_coo){((int)origin.x + 1 - origin.x) * delta.x,
+	side_dist = (t_xy){((int)origin.x + 1 - origin.x) * delta.x,
 		((int)origin.y + 1 - origin.y) * delta.y};
 	if (dir.x < 0)
 		side_dist.x = (origin.x - (int)origin.x) * delta.x;
@@ -59,59 +42,62 @@ t_coo	set_side_dists(t_coo origin, t_coo dir, t_coo delta)
 	return (side_dist);
 }
 
-t_coo	*get_wall_line(t_coo player, t_coo w, int side)
+t_xy	*get_wall_limits(t_xy player, t_xy w, int side)
 {
-	t_coo	*wall_limits;
+	t_xy	*wall_limits;
 
-	wall_limits = malloc(2 * sizeof(t_coo));
+	wall_limits = malloc(2 * sizeof(t_xy));
 	if (side)
 	{
 		if (player.x > (int)w.x)
 		{
-			wall_limits[0] = (t_coo){(int)w.x + 1, (int)w.y};
-			wall_limits[1] = (t_coo){(int)w.x + 1, (int)w.y + 1};
+			wall_limits[0] = (t_xy){(int)w.x + 1, (int)w.y};
+			wall_limits[1] = (t_xy){(int)w.x + 1, (int)w.y + 1};
 			return (wall_limits);
 		}
-		wall_limits[0] = (t_coo){(int)w.x, (int)w.y};
-		wall_limits[1] = (t_coo){(int)w.x, (int)w.y + 1};
+		wall_limits[0] = (t_xy){(int)w.x, (int)w.y};
+		wall_limits[1] = (t_xy){(int)w.x, (int)w.y + 1};
 		return (wall_limits);
 	}
 	if (player.y > (int)w.y)
 	{
-		wall_limits[0] = (t_coo){(int)w.x, (int)w.y + 1};
-		wall_limits[1] = (t_coo){(int)w.x + 1, (int)w.y + 1};
+		wall_limits[0] = (t_xy){(int)w.x, (int)w.y + 1};
+		wall_limits[1] = (t_xy){(int)w.x + 1, (int)w.y + 1};
 		return (wall_limits);
 	}
-		wall_limits[0] = (t_coo){(int)w.x, (int)w.y};
-		wall_limits[1] = (t_coo){(int)w.x + 1, (int)w.y};
+		wall_limits[0] = (t_xy){(int)w.x, (int)w.y};
+		wall_limits[1] = (t_xy){(int)w.x + 1, (int)w.y};
 	return (wall_limits);
 }
 
-t_ray	set_ray(t_app *papp, t_coo wall, double angle, int side)
+t_ray	set_ray(t_app *papp, t_xy wall, double angle, int is_vert)
 {
-	const t_coo		*wall_line = get_wall_line(papp->p, wall, side);
-	const t_coo		w = lines_intersection(papp->p,
-			(t_coo){papp->p.x + cos(angle), papp->p.y + sin(angle)},
+	const t_xy	cam_vec = rad_to_vect(papp->p_dir + M_PI / 2);
+	t_xy		cam_p;
+	t_xy		*wall_line;
+	double		dist;
+	t_xy		impact;
+
+	wall_line = get_wall_limits(papp->p, wall, is_vert);
+	impact = lines_intersection(papp->p,
+			(t_xy){papp->p.x + cos(angle), papp->p.y + sin(angle)},
 			wall_line[0], wall_line[1]);
-	printf("player: [%f, %f]\n", papp->p.x, papp->p.y);
-	printf("wall limits: [%f, %f] [%f, %f]\n", wall_line[0].x, wall_line[0].y, wall_line[1].x, wall_line[1].y);
-	printf("wall: [%f, %f]\n", w.x, w.y);
-	const t_coo	plane = rad_to_vect(papp->p_dir + M_PI / 2);
-	const t_coo		plane_start = lines_intersection((t_coo){papp->p.x + plane.x, papp->p.y + plane.y},
-			papp->p, w, (t_coo){w.x + cos(papp->p_dir),
-			w.y + sin(papp->p_dir)});
-	const double	dist = sqrt(pow(plane_start.x - w.x, 2)
-			+ pow(plane_start.y - w.y, 2));
-	return ((t_ray){w.x, w.y, plane_start.x, plane_start.y, dist, angle, side});
+	cam_p = lines_intersection(
+			(t_xy){papp->p.x + cam_vec.x, papp->p.y + cam_vec.y},
+			papp->p, impact,
+			(t_xy){impact.x + cos(papp->p_dir), impact.y + sin(papp->p_dir)});
+	dist = sqrt(pow(cam_p.x - impact.x, 2) + pow(cam_p.y - impact.y, 2));
+	free(wall_line);
+	return ((t_ray){wall, impact, cam_p, dist, angle, is_vert});
 }
 
-t_ray	get_first_wall(t_app *papp, t_coo origin, double angle)
+t_ray	cast_ray(t_app *papp, t_xy origin, double angle)
 {
-	const t_coo	dir = rad_to_vect(angle);
-	t_coo			side_dists;
-	const t_coo	step = (t_coo){1 + (dir.x < 0) * -2, 1 + (dir.y < 0) * -2};
-	const t_coo	delta = set_deltas(dir);
-	t_coo			curr;
+	const t_xy	dir = rad_to_vect(angle);
+	const t_xy	step = (t_xy){1 + (dir.x < 0) * -2, 1 + (dir.y < 0) * -2};
+	const t_xy	delta = set_deltas(dir);
+	t_xy		side_dists;
+	t_xy		curr;
 
 	curr = origin;
 	side_dists = set_side_dists(origin, dir, delta);
@@ -130,4 +116,21 @@ t_ray	get_first_wall(t_app *papp, t_coo origin, double angle)
 		if (papp->map[(int)curr.y][(int)curr.x] == '1')
 			return (set_ray(papp, curr, angle, 0));
 	}
+}
+
+t_array	get_walls(t_app *papp)
+{
+	t_array			rays;
+	double			angle;
+
+	rays = array_new(WIN_W, sizeof(t_ray), NULL, NULL);
+	angle = papp->p_dir -(FOV * M_PI) / 2;
+	while (angle - papp->p_dir <= (FOV * M_PI) / 2)
+	{
+		array_pushback(&rays,
+			(t_ray []){cast_ray(papp, papp->p,
+				angle)});
+		angle += (FOV * M_PI) / WIN_W;
+	}
+	return (rays);
 }
