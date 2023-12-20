@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 21:40:37 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/18 23:39:19 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/20 11:01:55 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,34 +42,6 @@ t_xy	set_side_dists(t_xy origin, t_xy dir, t_xy delta)
 	return (side_dist);
 }
 
-t_xy	*get_wall_limits(t_xy player, t_xy w, int side)
-{
-	t_xy	*wall_limits;
-
-	wall_limits = malloc(2 * sizeof(t_xy));
-	if (side)
-	{
-		if (player.x > (int)w.x)
-		{
-			wall_limits[0] = (t_xy){(int)w.x + 1, (int)w.y};
-			wall_limits[1] = (t_xy){(int)w.x + 1, (int)w.y + 1};
-			return (wall_limits);
-		}
-		wall_limits[0] = (t_xy){(int)w.x, (int)w.y};
-		wall_limits[1] = (t_xy){(int)w.x, (int)w.y + 1};
-		return (wall_limits);
-	}
-	if (player.y > (int)w.y)
-	{
-		wall_limits[0] = (t_xy){(int)w.x, (int)w.y + 1};
-		wall_limits[1] = (t_xy){(int)w.x + 1, (int)w.y + 1};
-		return (wall_limits);
-	}
-		wall_limits[0] = (t_xy){(int)w.x, (int)w.y};
-		wall_limits[1] = (t_xy){(int)w.x + 1, (int)w.y};
-	return (wall_limits);
-}
-
 t_ray	set_ray(t_app *papp, t_xy wall, double angle, int is_vert)
 {
 	const t_xy	cam_vec = rad_to_vect(papp->p_dir + M_PI / 2);
@@ -91,7 +63,7 @@ t_ray	set_ray(t_app *papp, t_xy wall, double angle, int is_vert)
 	return ((t_ray){wall, impact, cam_p, dist, angle, is_vert});
 }
 
-t_ray	cast_ray(t_app *papp, t_xy origin, double angle)
+t_ray	dda(t_app *papp, t_xy origin, double angle)
 {
 	const t_xy	dir = rad_to_vect(angle);
 	const t_xy	step = (t_xy){1 + (dir.x < 0) * -2, 1 + (dir.y < 0) * -2};
@@ -128,7 +100,7 @@ t_array	get_walls(t_app *papp)
 	while (angle - papp->p_dir <= (FOV * M_PI) / 2)
 	{
 		array_pushback(&rays,
-			(t_ray []){cast_ray(papp, papp->p,
+			(t_ray []){dda(papp, papp->p,
 				angle)});
 		angle += (FOV * M_PI) / WIN_W;
 	}

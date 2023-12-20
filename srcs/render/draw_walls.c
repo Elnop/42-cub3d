@@ -6,27 +6,25 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 20:10:37 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/19 04:10:34 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/20 11:57:39 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
-#include <stddef.h>
-#include <stdio.h>
 
 size_t	get_tex_x(t_app *papp, t_ray ray, t_texture tex)
 {
 	if (ray.is_vertical)
 	{
 		if (papp->p.x > ray.impact.x)
-			return (((int)ray.wall.y - ray.impact.y) * (double)tex.w);
+			return ((1 - ray.impact.y + (int)ray.wall.y) * (double)tex.w);
 		return ((ray.impact.y - (int)ray.wall.y) * (double)tex.w);
 	}
 	else
 	{
-		if (papp->p.y > ray.impact.y)
-			return ((ray.impact.x - (int)ray.wall.x) * (double)tex.w);
-		return (((int)ray.wall.x - ray.impact.x) * (double)tex.w);
+		if (papp->p.y < ray.impact.y)
+			return ((1 - ray.impact.x + (int)ray.wall.x) * (double)tex.w);
+		return ((ray.impact.x - (int)ray.wall.x) * (double)tex.w);
 	}
 }
 
@@ -67,7 +65,7 @@ void	draw_wall(t_app *papp, t_image img, size_t ray_start, size_t ray_end)
 		while (++i.y < wall_h)
 		{
 			image_put_px(img, i.x, i.y + WIN_H * 0.5 - wall_h * 0.5,
-				image_get_px_color(tex.img, tex_x, i.y * ratio_y));
+				tex_get_px_color(tex, tex_x, i.y * ratio_y));
 		}
 		i.x++;
 	}

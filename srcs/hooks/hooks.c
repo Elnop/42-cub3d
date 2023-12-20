@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 18:33:46 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/17 03:38:08 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/19 04:59:56 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,6 @@ static int	hooks_handler(int kc, t_app *papp)
 
 void	init_hooks(t_app *papp)
 {
-	mlx_hook(papp->win, 2, 1L << 0, hooks_handler, papp);
+	mlx_hook(papp->win, 2, 1L, hooks_handler, papp);
 	mlx_hook(papp->win, 17, 0, destroy_and_exit, papp);
 }

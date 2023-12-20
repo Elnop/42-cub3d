@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:23:37 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/17 03:54:01 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/20 11:01:48 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,11 @@ void	image_put_px(t_image img, int x, int y, int color)
 	*(int *)img.addr = color;
 }
 
-int	image_get_px_color(t_image img, int x, int y)
+int	tex_get_px_color(t_texture tex, int x, int y)
 {
-	img.addr += (y * img.line_length + x * (img.bits_per_pixel / 8));
-	return (*(int *)img.addr);
+	if (y < 0 || x < 0 || y >= tex.h || x >= tex.w)
+		return (0);
+	tex.img.addr
+		+= (y * tex.img.line_length + x * (tex.img.bits_per_pixel / 8));
+	return (*(int *)tex.img.addr);
 }

@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:01:40 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/19 03:57:01 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/20 11:03:51 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,9 +108,10 @@ int				destroy_and_exit(t_app *papp);
 t_image			image_new(void	*mlx, size_t width, size_t height);
 void			image_delete(void	*mlx, t_image img);
 void			image_put_px(t_image img, int x, int y, int color);
-int				image_get_px_color(t_image img, int x, int y);
+int				tex_get_px_color(t_texture tex, int x, int y);
 void			draw_line(t_image win_image, t_xy s, t_xy e, int c);
 void			draw_rect(t_image img, t_xy s, t_xy lengths, int color);
+t_xy			*get_wall_limits(t_xy player, t_xy w, int side);
 // RENDER
 void			draw_minimap(t_app *papp, t_image win_image);
 t_xy			rad_to_vect(double angle);
