@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ray_casting.c                                      :+:      :+:    :+:   */
+/*   get_walls.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 21:40:37 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/20 11:01:55 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/20 12:34:20 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ t_xy	set_side_dists(t_xy origin, t_xy dir, t_xy delta)
 	return (side_dist);
 }
 
-t_ray	set_ray(t_app *papp, t_xy wall, double angle, int is_vert)
+t_wall	set_wall(t_app *papp, t_xy wall, double angle, int is_vert)
 {
 	const t_xy	cam_vec = rad_to_vect(papp->p_dir + M_PI / 2);
 	t_xy		cam_p;
@@ -60,10 +60,10 @@ t_ray	set_ray(t_app *papp, t_xy wall, double angle, int is_vert)
 			(t_xy){impact.x + cos(papp->p_dir), impact.y + sin(papp->p_dir)});
 	dist = sqrt(pow(cam_p.x - impact.x, 2) + pow(cam_p.y - impact.y, 2));
 	free(wall_line);
-	return ((t_ray){wall, impact, cam_p, dist, angle, is_vert});
+	return ((t_wall){wall, impact, cam_p, dist, angle, is_vert});
 }
 
-t_ray	dda(t_app *papp, t_xy origin, double angle)
+t_wall	dda(t_app *papp, t_xy origin, double angle)
 {
 	const t_xy	dir = rad_to_vect(angle);
 	const t_xy	step = (t_xy){1 + (dir.x < 0) * -2, 1 + (dir.y < 0) * -2};
@@ -80,13 +80,13 @@ t_ray	dda(t_app *papp, t_xy origin, double angle)
 			side_dists.x += delta.x;
 			curr.x += step.x;
 			if (papp->map[(int)curr.y][(int)curr.x] == '1')
-				return (set_ray(papp, curr, angle, 1));
+				return (set_wall(papp, curr, angle, 1));
 			continue ;
 		}
 		side_dists.y += delta.y;
 		curr.y += step.y;
 		if (papp->map[(int)curr.y][(int)curr.x] == '1')
-			return (set_ray(papp, curr, angle, 0));
+			return (set_wall(papp, curr, angle, 0));
 	}
 }
 
@@ -95,12 +95,12 @@ t_array	get_walls(t_app *papp)
 	t_array			rays;
 	double			angle;
 
-	rays = array_new(WIN_W, sizeof(t_ray), NULL, NULL);
+	rays = array_new(WIN_W, sizeof(t_wall), NULL, NULL);
 	angle = papp->p_dir -(FOV * M_PI) / 2;
 	while (angle - papp->p_dir <= (FOV * M_PI) / 2)
 	{
 		array_pushback(&rays,
-			(t_ray []){dda(papp, papp->p,
+			(t_wall []){dda(papp, papp->p,
 				angle)});
 		angle += (FOV * M_PI) / WIN_W;
 	}

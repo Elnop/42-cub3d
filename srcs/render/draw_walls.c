@@ -6,13 +6,13 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 20:10:37 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/20 11:57:39 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/20 12:34:20 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
 
-size_t	get_tex_x(t_app *papp, t_ray ray, t_texture tex)
+size_t	get_tex_x(t_app *papp, t_wall ray, t_texture tex)
 {
 	if (ray.is_vertical)
 	{
@@ -28,7 +28,7 @@ size_t	get_tex_x(t_app *papp, t_ray ray, t_texture tex)
 	}
 }
 
-t_texture	get_texture(t_app *papp, t_ray ray)
+t_texture	get_texture(t_app *papp, t_wall ray)
 {
 	if (ray.is_vertical)
 	{

@@ -11,7 +11,7 @@ FILES = main \
 		init/init_textures \
 		render/draw_minimap \
 		render/draw_walls \
-		render/ray_casting \
+		render/get_walls \
 		hooks/hooks \
 		hooks/move_hooks \
 		utils/image_utils \

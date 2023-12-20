@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:01:40 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/20 11:03:51 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/20 12:34:20 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ typedef struct s_xy {
 	double	y;
 }	t_xy;
 
-typedef struct s_ray {
+typedef struct s_wall {
 	t_xy		wall;
 	t_xy		impact;
 	t_xy		cam_point;
 	double		len;
 	double		angle;
 	int			is_vertical;
-}	t_ray;
+}	t_wall;
 
 typedef struct s_image {
 	void	*img;
@@ -95,7 +95,7 @@ typedef struct s_app {
 	t_texture		texwe;
 	size_t			ray_i;
 	t_xy			plane;
-	t_ray			*rays;
+	t_wall			*rays;
 }	t_app;
 
 // INIT

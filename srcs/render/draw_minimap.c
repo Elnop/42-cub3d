@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 00:26:30 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/18 19:40:58 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/20 12:34:20 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	draw_rect(t_image win_image, t_xy s, t_xy lengths, int color)
 void	draw_rays(t_app *papp, t_image img)
 {
 	size_t	i;
-	t_ray	*rays;
+	t_wall	*rays;
 
 	rays = papp->rays;
 	i = 0;
