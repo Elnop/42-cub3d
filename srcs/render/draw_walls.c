@@ -6,11 +6,26 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 20:10:37 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/20 12:34:20 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/20 13:46:33 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
+
+t_xy	set_deltas(t_xy v)
+{
+	t_xy	delta;
+
+	if (!v.x)
+		delta.x = 1e30;
+	else
+		delta.x = fabs(1 / v.x);
+	if (!v.y)
+		delta.y = 1e30;
+	else
+		delta.y = fabs(1 / v.y);
+	return (delta);
+}
 
 size_t	get_tex_x(t_app *papp, t_wall ray, t_texture tex)
 {
@@ -57,6 +72,9 @@ void	draw_wall(t_app *papp, t_image img, size_t ray_start, size_t ray_end)
 	i.x = ray_start;
 	while (i.x < ray_end)
 	{
+		if (!papp->rays[(int)i.x].wall.x && !papp->rays[(int)i.x].wall.y
+			&& i.x++)
+			continue ;
 		wall_h = WIN_H
 			/ (papp->rays[(int)i.x].len + (!papp->rays[(int)i.x].len));
 		ratio_y = (double)tex.h / wall_h;

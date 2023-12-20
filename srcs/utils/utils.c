@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 20:07:10 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/20 11:02:58 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/20 13:34:08 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,4 +84,13 @@ t_xy	*get_wall_limits(t_xy player, t_xy w, int side)
 		wall_limits[0] = (t_xy){(int)w.x, (int)w.y};
 		wall_limits[1] = (t_xy){(int)w.x + 1, (int)w.y};
 	return (wall_limits);
+}
+
+bool	check_is_in_map(t_app *papp, t_xy coo)
+{
+	if ((int)coo.y < 0 || (int)coo.x < 0
+		|| (size_t)coo.y > array_size(papp->map)
+		|| (size_t)coo.x > lp_strlen(papp->map[(int)coo.y]))
+		return (false);
+	return (true);
 }

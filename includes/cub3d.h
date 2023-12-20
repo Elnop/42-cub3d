@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:01:40 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/20 12:34:20 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/20 13:51:03 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,8 @@ int				tex_get_px_color(t_texture tex, int x, int y);
 void			draw_line(t_image win_image, t_xy s, t_xy e, int c);
 void			draw_rect(t_image img, t_xy s, t_xy lengths, int color);
 t_xy			*get_wall_limits(t_xy player, t_xy w, int side);
+bool			check_is_in_map(t_app *papp, t_xy coo);
+t_xy			set_deltas(t_xy v);
 // RENDER
 void			draw_minimap(t_app *papp, t_image win_image);
 t_xy			rad_to_vect(double angle);

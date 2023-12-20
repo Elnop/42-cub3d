@@ -6,28 +6,11 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 21:40:37 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/20 12:34:20 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/20 13:53:39 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
-#include <math.h>
-#include <stdlib.h>
-
-t_xy	set_deltas(t_xy v)
-{
-	t_xy	delta;
-
-	if (!v.x)
-		delta.x = 1e30;
-	else
-		delta.x = fabs(1 / v.x);
-	if (!v.y)
-		delta.y = 1e30;
-	else
-		delta.y = fabs(1 / v.y);
-	return (delta);
-}
 
 t_xy	set_side_dists(t_xy origin, t_xy dir, t_xy delta)
 {
@@ -63,6 +46,12 @@ t_wall	set_wall(t_app *papp, t_xy wall, double angle, int is_vert)
 	return ((t_wall){wall, impact, cam_p, dist, angle, is_vert});
 }
 
+void	inc(double *side_dist, double *curr, double inc_side, double inc_curr)
+{
+	*side_dist += inc_side;
+	*curr += inc_curr;
+}
+
 t_wall	dda(t_app *papp, t_xy origin, double angle)
 {
 	const t_xy	dir = rad_to_vect(angle);
@@ -77,14 +66,16 @@ t_wall	dda(t_app *papp, t_xy origin, double angle)
 	{
 		if (side_dists.x < side_dists.y)
 		{
-			side_dists.x += delta.x;
-			curr.x += step.x;
+			inc(&side_dists.x, &curr.x, delta.x, step.x);
+			if (!check_is_in_map(papp, curr))
+				return ((t_wall){});
 			if (papp->map[(int)curr.y][(int)curr.x] == '1')
 				return (set_wall(papp, curr, angle, 1));
 			continue ;
 		}
-		side_dists.y += delta.y;
-		curr.y += step.y;
+		inc(&side_dists.y, &curr.y, delta.y, step.y);
+		if (!check_is_in_map(papp, curr))
+			return ((t_wall){});
 		if (papp->map[(int)curr.y][(int)curr.x] == '1')
 			return (set_wall(papp, curr, angle, 0));
 	}

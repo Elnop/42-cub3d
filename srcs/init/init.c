@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:00:46 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/18 19:17:48 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/20 13:05:06 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool	init_mlx(t_app *papp)
 	papp->mlx = mlx_init();
 	if (!papp->mlx)
 		return (false);
-	papp->win = mlx_new_window(papp->mlx, WIN_W, WIN_H, "cub3d");
+	papp->win = mlx_new_window(papp->mlx, WIN_W, WIN_H, "cub3D");
 	if (!papp->win)
 		return (free(papp->mlx), false);
 	return (true);
@@ -35,7 +35,11 @@ bool	init_mlx(t_app *papp)
 
 bool	init(int ac, char **av, t_app *papp)
 {
-	if (ac < 2 || !av[1][0])
+	if (ac < 2 || !av[1][0] || lp_strlen(av[1]) < 4
+		|| av[1][lp_strlen(av[1]) - 4] != '.'
+		|| av[1][lp_strlen(av[1]) - 3] != 'c'
+		|| av[1][lp_strlen(av[1]) - 2] != 'u'
+		|| av[1][lp_strlen(av[1]) - 1] != 'b')
 		return (false);
 	if (!init_map(papp, av[1]))
 		return (false);
