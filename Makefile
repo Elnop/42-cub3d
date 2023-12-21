@@ -12,8 +12,9 @@ FILES = main \
 		render/draw_minimap \
 		render/draw_walls \
 		render/get_walls \
-		hooks/hooks \
-		hooks/move_hooks \
+		hooks/init \
+		hooks/moves \
+		hooks/update \
 		utils/image_utils \
 		utils/destroy \
 		utils/utils

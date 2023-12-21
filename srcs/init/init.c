@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 18:00:46 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/20 13:05:06 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:39:13 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ bool	init_mlx(t_app *papp)
 
 bool	init(int ac, char **av, t_app *papp)
 {
+	*papp = (t_app){};
 	if (ac < 2 || !av[1][0] || lp_strlen(av[1]) < 4
 		|| av[1][lp_strlen(av[1]) - 4] != '.'
 		|| av[1][lp_strlen(av[1]) - 3] != 'c'

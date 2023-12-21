@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 19:01:40 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/20 13:51:03 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:36:39 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,15 @@ typedef union s_color {
 	};
 }	t_color;
 
+typedef struct s_hooks {
+	bool	w;
+	bool	a;
+	bool	s;
+	bool	d;
+	bool	right;
+	bool	left;
+}	t_hooks;
+
 typedef struct s_app {
 	char			**map;
 	t_xy			p;
@@ -96,13 +105,15 @@ typedef struct s_app {
 	size_t			ray_i;
 	t_xy			plane;
 	t_wall			*rays;
+	t_hooks			hooks;
 }	t_app;
 
 // INIT
 bool			init(int ac, char **av, t_app *papp);
 bool			init_map(t_app *papp, char *filename);
-bool			set_player(t_app *papp, double x, double y, char cardinal);
 bool			check_map(t_array map, t_xy p);
+bool			init_player(t_app *papp);
+bool			set_player(t_app *papp, double x, double y, char cardinal);
 // UTILS
 int				destroy_and_exit(t_app *papp);
 t_image			image_new(void	*mlx, size_t width, size_t height);
@@ -128,5 +139,5 @@ void			go_front(t_app *papp);
 void			go_back(t_app *papp);
 void			go_left(t_app *papp);
 void			go_right(t_app *papp);
-bool			init_player(t_app *papp);
+void			hooks_update(t_app *papp);
 #endif

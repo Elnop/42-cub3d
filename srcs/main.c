@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 13:15:22 by lperroti          #+#    #+#             */
-/*   Updated: 2023/12/18 23:40:09 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:37:56 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	draw_game(t_app *papp)
 
 	papp->rays = get_walls(papp);
 	win_img = image_new(papp->mlx, papp->win_w, papp->win_h);
+	hooks_update(papp);
 	draw_rect(win_img, (t_xy){0, 0},
 		(t_xy){WIN_W, (double)WIN_H / 2}, papp->ceil.hex);
 	draw_rect(win_img, (t_xy){0, (double)WIN_H / 2},
